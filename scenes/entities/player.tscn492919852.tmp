@@ -1,0 +1,64 @@
+[gd_scene load_steps=15 format=3 uid="uid://dbycu0kfo8q8d"]
+
+[ext_resource type="Texture2D" uid="uid://dkq1fsoupf04j" path="res://assets/visual/testhooman.png" id="1_i722k"]
+[ext_resource type="Shader" uid="uid://cnj2fgs1ctxu8" path="res://scripts/shaders/pixel_filtering.gdshader" id="1_r47wa"]
+[ext_resource type="Script" uid="uid://b275gymyav8jm" path="res://scripts/components/velocity/gravity_comp.gd" id="4_42nxq"]
+[ext_resource type="Script" uid="uid://du8jbsjjey6di" path="res://scripts/components/velocity/velocity_sub_comp.gd" id="4_d4qa6"]
+[ext_resource type="Script" uid="uid://c4uduqsd7nqte" path="res://scripts/components/velocity/velocity_comp.gd" id="5_5u6hq"]
+[ext_resource type="Script" uid="uid://duoxov3ulsixa" path="res://scripts/components/behaviors/player_input_comp.gd" id="7_dnykm"]
+[ext_resource type="Script" uid="uid://bp0a13kxttfmy" path="res://scripts/components/velocity/friction_comp.gd" id="7_ss7kx"]
+[ext_resource type="Script" uid="uid://cwul42vhk7vhl" path="res://scripts/components/velocity/velocity_controller_input_comp.gd" id="8_dnykm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jqi8p"]
+shader = ExtResource("1_r47wa")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_42nxq"]
+radius = 11.0
+height = 36.0
+
+[sub_resource type="Resource" id="Resource_d4qa6"]
+script = ExtResource("4_42nxq")
+gravity = 1000.0
+fall_boost = 2.0
+enabled = true
+metadata/_custom_type_script = "uid://b275gymyav8jm"
+
+[sub_resource type="Resource" id="Resource_dnykm"]
+script = ExtResource("7_ss7kx")
+friction_mult = Vector2(0.5, 0.9)
+enabled = true
+metadata/_custom_type_script = "uid://bp0a13kxttfmy"
+
+[sub_resource type="Resource" id="Resource_b6tgf"]
+script = ExtResource("7_dnykm")
+metadata/_custom_type_script = "uid://duoxov3ulsixa"
+
+[sub_resource type="Resource" id="Resource_c5rqy"]
+resource_local_to_scene = true
+script = ExtResource("8_dnykm")
+behavior = SubResource("Resource_b6tgf")
+runspeed = 200.0
+accel = 2400.0
+decel = 600.0
+jump_impulse = 310.0
+coyote_time = 0.2
+input_buffer_time = 0.2
+enabled = true
+metadata/_custom_type_script = "uid://cwul42vhk7vhl"
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+
+[node name="Testhooman" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_jqi8p")
+position = Vector2(1, -24)
+texture = ExtResource("1_i722k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -18)
+shape = SubResource("CapsuleShape2D_42nxq")
+
+[node name="Velocity" type="Node" parent="."]
+script = ExtResource("5_5u6hq")
+sub_components = Array[ExtResource("4_d4qa6")]([SubResource("Resource_d4qa6"), SubResource("Resource_dnykm"), SubResource("Resource_c5rqy")])
+metadata/_custom_type_script = "uid://c4uduqsd7nqte"

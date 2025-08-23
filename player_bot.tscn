@@ -1,0 +1,717 @@
+[gd_scene load_steps=17 format=3 uid="uid://cybupd33n8syi"]
+
+[ext_resource type="Script" uid="uid://dcc43rgpjme67" path="res://scripts/entities/character_controller.gd" id="1_gjs40"]
+[ext_resource type="Script" uid="uid://duoxov3ulsixa" path="res://scripts/behaviors/player_input_comp.gd" id="2_j44ee"]
+[ext_resource type="Shader" uid="uid://cnj2fgs1ctxu8" path="res://scripts/shaders/pixel_filtering.gdshader" id="3_tdgst"]
+[ext_resource type="Texture2D" uid="uid://bfworwpcsreik" path="res://assets/visual/test_gal.png" id="4_sle0f"]
+[ext_resource type="Script" uid="uid://du4f2uqso8evc" path="res://addons/soupik/modifications/soup_group.gd" id="5_8ykbp"]
+[ext_resource type="Script" uid="uid://cc7wp8bjyjqeg" path="res://addons/soupik/modifications/soup_two_bone_ik.gd" id="6_dtoc6"]
+[ext_resource type="Script" uid="uid://bncybm74hw38w" path="res://addons/soupik/modifications/soup_look_at.gd" id="7_dtoc6"]
+[ext_resource type="Script" uid="uid://c7bxvwlwq17ui" path="res://addons/soupik/utility/soup_bone.gd" id="8_n4koy"]
+[ext_resource type="Script" uid="uid://djsd2ie32vjnj" path="res://addons/soupik/resources/zm_easing_params.gd" id="9_rfd3m"]
+[ext_resource type="Script" uid="uid://dnen0st1in8r7" path="res://addons/soupik/resources/zm_easing_rotational_params.gd" id="10_vwqq3"]
+
+[sub_resource type="Resource" id="Resource_tdgst"]
+resource_local_to_scene = true
+script = ExtResource("2_j44ee")
+metadata/_custom_type_script = "uid://duoxov3ulsixa"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ykbp"]
+shader = ExtResource("3_tdgst")
+
+[sub_resource type="Resource" id="Resource_lkohf"]
+script = ExtResource("9_rfd3m")
+frequency = 0.501
+damping = 0.3
+reaction = 1.0
+gravity = Vector2(0, 32)
+metadata/_custom_type_script = "uid://djsd2ie32vjnj"
+
+[sub_resource type="Resource" id="Resource_qmhos"]
+script = ExtResource("10_vwqq3")
+velocity_effect = 10.0
+params = SubResource("Resource_lkohf")
+metadata/_custom_type_script = "uid://dnen0st1in8r7"
+
+[sub_resource type="Resource" id="Resource_mfhsa"]
+script = ExtResource("10_vwqq3")
+velocity_effect = 10.0
+params = SubResource("Resource_lkohf")
+metadata/_custom_type_script = "uid://dnen0st1in8r7"
+
+[sub_resource type="Resource" id="Resource_vwqq3"]
+script = ExtResource("10_vwqq3")
+velocity_effect = 10.0
+params = SubResource("Resource_lkohf")
+metadata/_custom_type_script = "uid://dnen0st1in8r7"
+
+[node name="PlayerBot" type="CharacterBody2D"]
+script = ExtResource("1_gjs40")
+behavior = SubResource("Resource_tdgst")
+metadata/_custom_type_script = "uid://dcc43rgpjme67"
+
+[node name="Ref" type="Sprite2D" parent="."]
+visible = false
+self_modulate = Color(0.82, 0.82, 0.82, 0.498039)
+material = SubResource("ShaderMaterial_8ykbp")
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-29, -59)
+region_enabled = true
+region_rect = Rect2(72, 68, 55, 59)
+
+[node name="Sprites" type="CanvasGroup" parent="."]
+
+[node name="ArmRGroup" type="Node2D" parent="Sprites"]
+position = Vector2(3, -39)
+
+[node name="ForeArmR" type="Sprite2D" parent="Sprites/ArmRGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(0.0388508, 3.68531)
+rotation = 1.09321
+scale = Vector2(0.999996, 0.999996)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-2, -2)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1, 44, 11, 4)
+
+[node name="UpperArmR" type="Sprite2D" parent="Sprites/ArmRGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-3.1786, -2.53143)
+rotation = 1.09321
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-3, -3)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1, 50, 11, 5)
+
+[node name="HandR" type="Sprite2D" parent="Sprites/ArmRGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(3.71593, 10.7901)
+rotation = 0.959331
+scale = Vector2(0.999995, 0.999995)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-1, -1)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(12, 37, 9, 5)
+
+[node name="LegRGroup" type="Node2D" parent="Sprites"]
+position = Vector2(2, -22)
+
+[node name="AnkleL" type="Sprite2D" parent="Sprites/LegRGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(1.55344, 8.62188)
+rotation = -0.0333676
+scale = Vector2(0.999996, 0.999996)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-3, -1)
+region_enabled = true
+region_rect = Rect2(9, 109, 6, 12)
+
+[node name="FootL" type="Sprite2D" parent="Sprites/LegRGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(1.88705, 18.6163)
+scale = Vector2(0.999995, 0.999995)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-3, -1)
+region_enabled = true
+region_rect = Rect2(9, 123, 8, 4)
+
+[node name="ThighR" type="Sprite2D" parent="Sprites/LegRGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-0.0212667, -5.28925)
+rotation = -0.112718
+scale = Vector2(0.999997, 0.999997)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-4, -3)
+region_enabled = true
+region_rect = Rect2(11, 88, 8, 19)
+
+[node name="BodyGroup" type="Node2D" parent="Sprites"]
+position = Vector2(0, -25)
+
+[node name="Body" type="Sprite2D" parent="Sprites/BodyGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(1.97873, -2.28925)
+rotation = -0.145133
+scale = Vector2(1, 1)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-8, -9)
+region_enabled = true
+region_rect = Rect2(4, 74, 11, 12)
+
+[node name="Torso" type="Sprite2D" parent="Sprites/BodyGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-1.71284, -6.80281)
+rotation = -0.261808
+scale = Vector2(0.999999, 0.999999)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-7, -16)
+region_enabled = true
+region_rect = Rect2(1, 57, 14, 15)
+
+[node name="LegLGroup" type="Node2D" parent="Sprites"]
+position = Vector2(-3, -22)
+
+[node name="AnkleL" type="Sprite2D" parent="Sprites/LegLGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-4.80425, 9.07691)
+rotation = 0.410959
+scale = Vector2(0.999997, 0.999997)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-3, -1)
+region_enabled = true
+region_rect = Rect2(1, 109, 6, 12)
+
+[node name="ThighL" type="Sprite2D" parent="Sprites/LegLGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-0.958186, -4.4215)
+rotation = 0.348879
+scale = Vector2(0.999999, 0.999999)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-4, -3)
+region_enabled = true
+region_rect = Rect2(1, 88, 8, 19)
+
+[node name="FootL" type="Sprite2D" parent="Sprites/LegLGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-8.79913, 18.2443)
+scale = Vector2(0.999996, 0.999996)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-3, -1)
+region_enabled = true
+region_rect = Rect2(1, 123, 6, 4)
+
+[node name="HeadGroup" type="Node2D" parent="Sprites"]
+position = Vector2(-2, -46)
+
+[node name="HairB" type="Sprite2D" parent="Sprites/HeadGroup"]
+z_index = -1
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-3.95239, -8.95154)
+rotation = 0.108666
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-7, -3)
+region_enabled = true
+region_rect = Rect2(39, 2, 14, 14)
+
+[node name="Forehead" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-4.82, -0.998749)
+rotation = 0.108666
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-5, -11)
+region_enabled = true
+region_rect = Rect2(2, 17, 12, 8)
+
+[node name="Head" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-4.82, -0.998749)
+rotation = 0.108666
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-6, -5)
+region_enabled = true
+region_rect = Rect2(1, 27, 13, 8)
+
+[node name="Face" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-1.6208, -2.66159)
+rotation = 0.108666
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-4, -2)
+region_enabled = true
+region_rect = Rect2(18, 22, 7, 3)
+
+[node name="HairF" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-4.82, -0.998749)
+rotation = 0.108666
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-7, -13)
+region_enabled = true
+region_rect = Rect2(21, 3, 16, 8)
+
+[node name="BangR" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(2.7894, -6.20419)
+rotation = 0.098415
+scale = Vector2(0.999994, 0.999994)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-1, -1)
+region_enabled = true
+region_rect = Rect2(16, 3, 3, 11)
+
+[node name="BangL" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-5.05494, -8.0659)
+rotation = 0.098415
+scale = Vector2(0.999993, 0.999993)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-3, -1)
+region_enabled = true
+region_rect = Rect2(1, 2, 5, 12)
+
+[node name="BangM" type="Sprite2D" parent="Sprites/HeadGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-0.883085, -9.6122)
+rotation = 0.0984151
+scale = Vector2(0.999993, 0.999993)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-2, -1)
+region_enabled = true
+region_rect = Rect2(8, 2, 6, 8)
+
+[node name="ArmLGroup" type="Node2D" parent="Sprites"]
+position = Vector2(-6, -39)
+
+[node name="UpperArmL" type="Sprite2D" parent="Sprites/ArmLGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-2.8719, -0.201981)
+rotation = -1.36923
+scale = Vector2(0.999999, 0.999999)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-9, -3)
+region_enabled = true
+region_rect = Rect2(1, 50, 11, 5)
+
+[node name="ForeArmL" type="Sprite2D" parent="Sprites/ArmLGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-4.27333, 6.65629)
+rotation = -1.22733
+scale = Vector2(0.999998, 0.999998)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-9, -2)
+region_enabled = true
+region_rect = Rect2(1, 44, 11, 4)
+
+[node name="HandL" type="Sprite2D" parent="Sprites/ArmLGroup"]
+material = SubResource("ShaderMaterial_8ykbp")
+position = Vector2(-5.68898, 13.5842)
+rotation = -0.785415
+scale = Vector2(0.999997, 0.999997)
+texture = ExtResource("4_sle0f")
+centered = false
+offset = Vector2(-8, -2)
+region_enabled = true
+region_rect = Rect2(12, 37, 9, 5)
+
+[node name="Skeleton2D" type="Skeleton2D" parent="."]
+rotation = 6.28318
+
+[node name="SoupGroup" type="Node" parent="Skeleton2D"]
+script = ExtResource("5_8ykbp")
+metadata/_custom_type_script = "uid://du4f2uqso8evc"
+
+[node name="PelvisIK" type="Node" parent="Skeleton2D/SoupGroup" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../IKTargets/PelvisIK")
+enabled = true
+bone_node = NodePath("../../BodyBone")
+look_at_mode = 1
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="TorsoIK" type="Node" parent="Skeleton2D/SoupGroup" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../IKTargets/TorsoIK")
+enabled = true
+bone_node = NodePath("../../BodyBone/TorsoBone")
+look_at_mode = 1
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="LegIK" type="Node" parent="Skeleton2D/SoupGroup"]
+script = ExtResource("5_8ykbp")
+metadata/_custom_type_script = "uid://du4f2uqso8evc"
+
+[node name="LegRIK" type="Node" parent="Skeleton2D/SoupGroup/LegIK" node_paths=PackedStringArray("target_node", "joint_one_bone_node", "joint_two_bone_node")]
+script = ExtResource("6_dtoc6")
+target_node = NodePath("../../../IKTargets/LegRIK")
+enabled = true
+flip_bend_direction = true
+softness = 0.2
+joint_one_bone_node = NodePath("../../../BodyBone/ThighRBone")
+joint_two_bone_node = NodePath("../../../BodyBone/ThighRBone/AnkleRBone")
+metadata/_custom_type_script = "uid://cc7wp8bjyjqeg"
+
+[node name="FootRIK" type="Node" parent="Skeleton2D/SoupGroup/LegIK" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../../IKTargets/LegRIK")
+enabled = true
+bone_node = NodePath("../../../BodyBone/ThighRBone/AnkleRBone/FootRBone")
+look_at_mode = 1
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="LegLIK" type="Node" parent="Skeleton2D/SoupGroup/LegIK" node_paths=PackedStringArray("target_node", "joint_one_bone_node", "joint_two_bone_node")]
+script = ExtResource("6_dtoc6")
+target_node = NodePath("../../../IKTargets/LegLIK")
+enabled = true
+flip_bend_direction = true
+softness = 0.2
+joint_one_bone_node = NodePath("../../../BodyBone/ThighLBone")
+joint_two_bone_node = NodePath("../../../BodyBone/ThighLBone/AnkleLBone2")
+metadata/_custom_type_script = "uid://cc7wp8bjyjqeg"
+
+[node name="FootLIK" type="Node" parent="Skeleton2D/SoupGroup/LegIK" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../../IKTargets/LegLIK")
+enabled = true
+bone_node = NodePath("../../../BodyBone/ThighLBone/AnkleLBone2/FootLBone2")
+look_at_mode = 1
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="ArmIK" type="Node" parent="Skeleton2D/SoupGroup"]
+script = ExtResource("5_8ykbp")
+metadata/_custom_type_script = "uid://du4f2uqso8evc"
+
+[node name="ArmRIK" type="Node" parent="Skeleton2D/SoupGroup/ArmIK" node_paths=PackedStringArray("target_node", "joint_one_bone_node", "joint_two_bone_node")]
+script = ExtResource("6_dtoc6")
+target_node = NodePath("../../../IKTargets/ArmRIK")
+enabled = true
+softness = 0.2
+joint_one_bone_node = NodePath("../../../BodyBone/TorsoBone/UpperArmRBone")
+joint_two_bone_node = NodePath("../../../BodyBone/TorsoBone/UpperArmRBone/ForeArmRBone")
+metadata/_custom_type_script = "uid://cc7wp8bjyjqeg"
+
+[node name="HandRIK" type="Node" parent="Skeleton2D/SoupGroup/ArmIK" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../../IKTargets/ArmRIK")
+enabled = true
+bone_node = NodePath("../../../BodyBone/TorsoBone/UpperArmRBone/ForeArmRBone/HandRBone")
+look_at_mode = 1
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="ArmLIK" type="Node" parent="Skeleton2D/SoupGroup/ArmIK" node_paths=PackedStringArray("target_node", "joint_one_bone_node", "joint_two_bone_node")]
+script = ExtResource("6_dtoc6")
+target_node = NodePath("../../../IKTargets/ArmLIK")
+enabled = true
+softness = 0.2
+joint_one_bone_node = NodePath("../../../BodyBone/TorsoBone/UpperArmLBone")
+joint_two_bone_node = NodePath("../../../BodyBone/TorsoBone/UpperArmLBone/ForeArmLBone")
+metadata/_custom_type_script = "uid://cc7wp8bjyjqeg"
+
+[node name="HandLIK" type="Node" parent="Skeleton2D/SoupGroup/ArmIK" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../../IKTargets/ArmLIK")
+enabled = true
+bone_node = NodePath("../../../BodyBone/TorsoBone/UpperArmLBone/ForeArmLBone/HandLBone")
+look_at_mode = 1
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="HeadIK" type="Node" parent="Skeleton2D/SoupGroup" node_paths=PackedStringArray("target_node", "bone_node")]
+script = ExtResource("7_dtoc6")
+target_node = NodePath("../../IKTargets/HeadIK")
+enabled = true
+bone_node = NodePath("../../BodyBone/TorsoBone/HeadBone")
+metadata/_custom_type_script = "uid://bncybm74hw38w"
+
+[node name="IKTargets" type="Node2D" parent="Skeleton2D"]
+
+[node name="HeadIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(39.0004, -41.9997)
+
+[node name="LegLIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(-13, -1.00012)
+
+[node name="LegRIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(4, 3.62396e-05)
+
+[node name="ArmLIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(-12.9998, -19.0001)
+rotation = 5.49778
+
+[node name="ArmRIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(12.0002, -17.9999)
+rotation = 0.95934
+
+[node name="PelvisIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(-33.9998, -21.0003)
+rotation = -0.145124
+
+[node name="TorsoIK" type="Marker2D" parent="Skeleton2D/IKTargets"]
+position = Vector2(-37.9996, -41.0003)
+rotation = -0.261799
+
+[node name="BodyBone" type="Bone2D" parent="Skeleton2D"]
+visible = false
+position = Vector2(0, -27)
+rotation = -0.145124
+scale = Vector2(1, 1)
+rest = Transform2D(1, 0, 0, 1, 0, -27)
+auto_calculate_length_and_angle = false
+length = 2.0
+bone_angle = 0.0
+
+[node name="ThighRBone" type="Bone2D" parent="Skeleton2D/BodyBone"]
+position = Vector2(2, 0)
+rotation = 0.0324148
+scale = Vector2(0.999998, 0.999998)
+rest = Transform2D(1, 0, 0, 1, 2, 0)
+
+[node name="AnkleRBone" type="Bone2D" parent="Skeleton2D/BodyBone/ThighRBone"]
+position = Vector2(0, 14)
+rotation = 0.0793501
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, 0, 14)
+
+[node name="FootRBone" type="Bone2D" parent="Skeleton2D/BodyBone/ThighRBone/AnkleRBone"]
+position = Vector2(0, 10)
+rotation = 0.0333587
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, 0, 10)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 0.0
+
+[node name="FootLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/ThighRBone/AnkleRBone/FootRBone"]
+remote_path = NodePath("../../../../../../Sprites/LegRGroup/FootL")
+metadata/_edit_lock_ = true
+
+[node name="AnkleLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/ThighRBone/AnkleRBone"]
+remote_path = NodePath("../../../../../Sprites/LegRGroup/AnkleL")
+metadata/_edit_lock_ = true
+
+[node name="ThighRRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/ThighRBone"]
+position = Vector2(0, 1.19209e-07)
+remote_path = NodePath("../../../../Sprites/LegRGroup/ThighR")
+
+[node name="ThighLBone" type="Bone2D" parent="Skeleton2D/BodyBone"]
+position = Vector2(-4, 0)
+rotation = 0.494012
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, -4, 0)
+
+[node name="AnkleLBone2" type="Bone2D" parent="Skeleton2D/BodyBone/ThighLBone"]
+position = Vector2(1, 14)
+rotation = 0.0620794
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, 1, 14)
+
+[node name="FootLBone2" type="Bone2D" parent="Skeleton2D/BodyBone/ThighLBone/AnkleLBone2"]
+position = Vector2(0, 10)
+rotation = -0.410968
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, 0, 10)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 0.0
+
+[node name="FootLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/ThighLBone/AnkleLBone2/FootLBone2"]
+remote_path = NodePath("../../../../../../Sprites/LegLGroup/FootL")
+metadata/_edit_lock_ = true
+
+[node name="AnkleLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/ThighLBone/AnkleLBone2"]
+remote_path = NodePath("../../../../../Sprites/LegLGroup/AnkleL")
+metadata/_edit_lock_ = true
+
+[node name="ThighLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/ThighLBone"]
+position = Vector2(0, 2.38419e-07)
+remote_path = NodePath("../../../../Sprites/LegLGroup/ThighL")
+
+[node name="TorsoBone" type="Bone2D" parent="Skeleton2D/BodyBone"]
+position = Vector2(-1, -5)
+rotation = -0.116675
+scale = Vector2(1, 1)
+rest = Transform2D(1, 0, 0, 1, -1, -5)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 0.0
+
+[node name="HeadBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone"]
+position = Vector2(-1, -16)
+rotation = 0.370474
+scale = Vector2(0.999998, 0.999998)
+rest = Transform2D(1, 0, 0, 1, -1, -16)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 0.0
+
+[node name="BangRBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+position = Vector2(7, -6)
+rotation = -0.0102507
+scale = Vector2(0.999996, 0.999996)
+rest = Transform2D(1, 0, 0, 1, 7, -6)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 90.0
+script = ExtResource("8_n4koy")
+transform_mode = 0
+target_rotation = -0.00544081
+target_position = Vector2(7, -6)
+ease_rotation = true
+rotation_easing_params = SubResource("Resource_qmhos")
+metadata/_custom_type_script = "uid://c7bxvwlwq17ui"
+
+[node name="BangRRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone/BangRBone"]
+remote_path = NodePath("../../../../../../Sprites/HeadGroup/BangR")
+metadata/_edit_lock_ = true
+
+[node name="BangLBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+position = Vector2(-1, -7)
+rotation = -0.0102506
+scale = Vector2(0.999996, 0.999996)
+rest = Transform2D(1, 0, 0, 1, -1, -7)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 90.0
+script = ExtResource("8_n4koy")
+transform_mode = 0
+target_rotation = -0.00544074
+target_position = Vector2(-1, -7)
+ease_rotation = true
+rotation_easing_params = SubResource("Resource_mfhsa")
+metadata/_custom_type_script = "uid://c7bxvwlwq17ui"
+
+[node name="BangLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone/BangLBone"]
+remote_path = NodePath("../../../../../../Sprites/HeadGroup/BangL")
+metadata/_edit_lock_ = true
+
+[node name="BangMBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+position = Vector2(4, -7)
+rotation = -0.0102505
+scale = Vector2(0.999996, 0.999996)
+rest = Transform2D(1, 0, 0, 1, 4, -7)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 90.0
+script = ExtResource("8_n4koy")
+transform_mode = 0
+target_rotation = -0.00544075
+target_position = Vector2(4, -7)
+ease_rotation = true
+rotation_easing_params = SubResource("Resource_vwqq3")
+metadata/_custom_type_script = "uid://c7bxvwlwq17ui"
+
+[node name="BangMRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone/BangMBone"]
+position = Vector2(-1, -2)
+remote_path = NodePath("../../../../../../Sprites/HeadGroup/BangM")
+metadata/_edit_lock_ = true
+
+[node name="HairBBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+position = Vector2(1, -6)
+rest = Transform2D(1, 0, 0, 1, 1, -6)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 90.0
+
+[node name="HairBRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone/HairBBone"]
+position = Vector2(-1, -2)
+remote_path = NodePath("../../../../../../Sprites/HeadGroup/HairB")
+metadata/_edit_lock_ = true
+
+[node name="ForeheadRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+remote_path = NodePath("../../../../../Sprites/HeadGroup/Forehead")
+metadata/_edit_lock_ = true
+
+[node name="FaceRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+position = Vector2(3, -2)
+remote_path = NodePath("../../../../../Sprites/HeadGroup/Face")
+metadata/_edit_lock_ = true
+
+[node name="HeadRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+remote_path = NodePath("../../../../../Sprites/HeadGroup/Head")
+metadata/_edit_lock_ = true
+
+[node name="HairFRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/HeadBone"]
+remote_path = NodePath("../../../../../Sprites/HeadGroup/HairF")
+metadata/_edit_lock_ = true
+
+[node name="UpperArmLBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone"]
+position = Vector2(-5, -9)
+rotation = -1.10742
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(0.258816, -0.965927, 0.965927, 0.258816, -5, -9)
+
+[node name="ForeArmLBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmLBone"]
+position = Vector2(-7, 0)
+rotation = 0.141897
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, -7, 0)
+
+[node name="HandLBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmLBone/ForeArmLBone"]
+position = Vector2(-7, 1)
+rotation = 0.441918
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, -7, 1)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 180.0
+
+[node name="HandLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmLBone/ForeArmLBone/HandLBone"]
+remote_path = NodePath("../../../../../../../Sprites/ArmLGroup/HandL")
+metadata/_edit_lock_ = true
+
+[node name="ForeArmLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmLBone/ForeArmLBone"]
+remote_path = NodePath("../../../../../../Sprites/ArmLGroup/ForeArmL")
+metadata/_edit_lock_ = true
+
+[node name="UpperArmLRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmLBone"]
+remote_path = NodePath("../../../../../Sprites/ArmLGroup/UpperArmL")
+metadata/_edit_lock_ = true
+
+[node name="UpperArmRBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone"]
+position = Vector2(4, -9)
+rotation = 1.35502
+scale = Vector2(0.999998, 0.999998)
+rest = Transform2D(0.258816, 0.965927, -0.965927, 0.258816, 4, -9)
+
+[node name="ForeArmRBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmRBone"]
+position = Vector2(7, 0)
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, 7, 0)
+
+[node name="HandRBone" type="Bone2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmRBone/ForeArmRBone"]
+position = Vector2(8, 0)
+rotation = -0.13388
+scale = Vector2(0.999999, 0.999999)
+rest = Transform2D(1, 0, 0, 1, 8, 0)
+auto_calculate_length_and_angle = false
+length = 4.0
+bone_angle = 0.0
+
+[node name="HandRRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmRBone/ForeArmRBone/HandRBone"]
+remote_path = NodePath("../../../../../../../Sprites/ArmRGroup/HandR")
+metadata/_edit_lock_ = true
+
+[node name="ForeArmRRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmRBone/ForeArmRBone"]
+remote_path = NodePath("../../../../../../Sprites/ArmRGroup/ForeArmR")
+metadata/_edit_lock_ = true
+
+[node name="UpperArmRRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone/UpperArmRBone"]
+remote_path = NodePath("../../../../../Sprites/ArmRGroup/UpperArmR")
+metadata/_edit_lock_ = true
+
+[node name="TorsoRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone/TorsoBone"]
+remote_path = NodePath("../../../../Sprites/BodyGroup/Torso")
+metadata/_edit_lock_ = true
+
+[node name="BodyRT" type="RemoteTransform2D" parent="Skeleton2D/BodyBone"]
+position = Vector2(2, 0)
+remote_path = NodePath("../../../Sprites/BodyGroup/Body")

@@ -1,8 +1,10 @@
 shader_type canvas_item;
 render_mode unshaded;
 
-// Texture must have 'Filter'-flag enabled!
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_linear;
 
+varying vec4 modulate;
+// Texture must have 'Filter'-flag enabled!
 // Automatic smoothing
 // independent of geometry and perspective
 vec4 texturePointSmooth(sampler2D smp, vec2 uv, vec2 pixel_size)
@@ -23,7 +25,13 @@ vec4 texturePointSmooth(sampler2D smp, vec2 uv, vec2 pixel_size)
 	return textureGrad(smp, uv + uv_dxy_pixels * pixel_size, ddx, ddy);
 }
 
+void vertex()
+{
+	modulate = COLOR;
+}
+
 void fragment()
 {
-	COLOR = texturePointSmooth(TEXTURE, UV, TEXTURE_PIXEL_SIZE);
+	vec4 smoothColor = texturePointSmooth(TEXTURE, UV, TEXTURE_PIXEL_SIZE);
+	COLOR = smoothColor * modulate;
 }
