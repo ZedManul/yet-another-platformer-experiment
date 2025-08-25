@@ -37,8 +37,8 @@ extends SoupMod
 
 
 
-var angle_offset: float = 0
-var target_vector: Vector2 = Vector2.RIGHT
+@export_storage var angle_offset: float = 0
+@export_storage var target_vector: Vector2 = Vector2.RIGHT
 
 func _get_configuration_warnings():
 	var warn_msg: Array[String] = []
