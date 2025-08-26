@@ -8,10 +8,12 @@ class_name PropertyPresetManager extends Node
 @export var current_state: String:
 	set(value):
 		current_state = value
-		apply()
+		if states.has(current_state): apply()
 @export var states: Array[String]
 @export var target_properties: Array[PropertyPreset]
-@export_storage var values: Dictionary[String,PropertyPresetGroup]
+@export_storage var values: Dictionary[String,PropertyPresetGroup]:
+	set(value):
+		values = value.duplicate(true)
 
 
 func record(state := current_state) -> void:
