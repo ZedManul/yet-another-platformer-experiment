@@ -15,7 +15,6 @@ class_name PropertyPresetManager extends Node
 	set(value):
 		values = value.duplicate(true)
 
-
 func record(state := current_state) -> void:
 	#print_rich("[color=slategray]recording: ", state, "[/color]")
 	if not states.has(state):
