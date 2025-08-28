@@ -19,13 +19,49 @@ class_name PlatformerCharacterController extends CharacterBody2D
 
 var coyote_time_left: float
 var jump_buffer_left: float
+var just_jumped: bool = false
 
 func _physics_process(delta: float) -> void:
+	_process_timers(delta)
 	behavior.calc_prev()
 	behavior.update()
-	
-	
+	_process_gravity(delta)
+	_process_run(delta)
+	_process_jump(delta)
+	move_and_slide()
+
 
 func _process_timers(delta) -> void:
 	coyote_time_left = move_toward(coyote_time_left, 0, delta)
 	jump_buffer_left = move_toward(jump_buffer_left, 0, delta)
+
+func _process_gravity(delta) -> void:
+	if velocity.y<0:
+		velocity.y += gravity * delta
+	else:
+		velocity.y += gravity * fall_boost * delta
+
+func _process_run(delta) -> void:
+	var run_dir = behavior.cmd_direction[&"move"].x
+	if run_dir == 0.0:
+		velocity.x = move_toward(velocity.x,0.0,decel * delta)
+	else:
+		velocity.x = move_toward(velocity.x, run_speed * run_dir, accel * delta)
+
+func _process_jump(delta) -> void:
+	var jump_input_just_pressed = behavior.cmd_bool[&"jump"] and not behavior.prev_cmd_bool[&"jump"]
+	var jump_input_just_released = not behavior.cmd_bool[&"jump"] and behavior.prev_cmd_bool[&"jump"]
+	
+	if is_on_floor(): coyote_time_left = coyote_time
+	if jump_input_just_pressed: jump_buffer_left = jump_buffer
+	
+	if coyote_time_left > 0 and jump_buffer_left > 0:
+		velocity.y = -jump_impulse
+		coyote_time_left = 0.0
+		jump_buffer_left = 0.0
+		just_jumped = true
+	
+	if velocity.y<0.0 and jump_input_just_released: 
+		velocity.y/=2.0;
+	
+	
