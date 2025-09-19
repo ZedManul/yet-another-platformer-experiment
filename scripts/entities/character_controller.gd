@@ -20,6 +20,7 @@ class_name PlatformerCharacterController extends CharacterBody2D
 var coyote_time_left: float
 var jump_buffer_left: float
 var just_jumped: bool = false
+var orient: float = 1
 
 func _physics_process(delta: float) -> void:
 	_process_timers(delta)
@@ -47,6 +48,8 @@ func _process_run(delta) -> void:
 		velocity.x = move_toward(velocity.x,0.0,decel * delta)
 	else:
 		velocity.x = move_toward(velocity.x, run_speed * run_dir, accel * delta)
+		scale.x = sign(run_dir) * orient
+		orient = sign(run_dir)
 
 func _process_jump(delta) -> void:
 	var jump_input_just_pressed = behavior.cmd_bool[&"jump"] and not behavior.prev_cmd_bool[&"jump"]

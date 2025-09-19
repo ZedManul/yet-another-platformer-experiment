@@ -187,7 +187,7 @@ func handle_rotation_easing(delta: float) -> void:
 	
 	
 	var extra_force: Vector2 = (prev_global_pos - global_position) * rotation_easing_params.velocity_effect * delta
-	var force_sum: Vector2 = extra_force + rotation_easing_params.params.gravity * PI / 180.0 
+	var force_sum: Vector2 = extra_force + rotation_easing_params.params.gravity * delta * PI / 180.0 
 	var force_orient: float = angle_diff(force_sum.angle(),angle_wrap(global_rotation + offset_angle))
 	var force_effect: float = force_orient * abs(sin(force_orient)) * force_sum.length()
 	
