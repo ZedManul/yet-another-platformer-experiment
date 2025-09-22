@@ -65,8 +65,8 @@ tile_set = SubResource("TileSet_1kouj")
 metadata/_edit_lock_ = true
 
 [node name="PlayerBot" parent="." instance=ExtResource("5_b6bv0")]
-position = Vector2(164, 143)
+position = Vector2(164, 144)
 behavior = SubResource("Resource_vkq25")
 
 [node name="Camera2D" type="Camera2D" parent="PlayerBot"]
-position = Vector2(-1, -100)
+position = Vector2(0, -100)

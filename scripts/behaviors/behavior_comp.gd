@@ -1,6 +1,7 @@
 @tool
 class_name BehaviorComponent extends Resource
 
+var owner: Node
 
 var cmd_direction: Dictionary[StringName, Vector2] = {
 	&"move" : Vector2.ZERO,
