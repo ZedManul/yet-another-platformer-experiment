@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://eliwkm4e15c0"]
+
+[ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="1_tb2qs"]
+[ext_resource type="Script" uid="uid://cpi3cuvwp1uut" path="res://scripts/components/damage_data.gd" id="2_dfjxe"]
+
+[sub_resource type="Resource" id="Resource_4iif5"]
+resource_local_to_scene = true
+script = ExtResource("2_dfjxe")
+damage = 1.0
+fixed_knockback = true
+knockback = Vector2(0, -300)
+transform_knockback = false
+scale_knockback = true
+metadata/_custom_type_script = "uid://cpi3cuvwp1uut"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_01hlq"]
+size = Vector2(64, 40)
+
+[node name="Spoik" type="Polygon2D"]
+color = Color(0.66, 0.06600002, 0.06600002, 1)
+polygon = PackedVector2Array(-16, -24, -8, -48, 0, -32, 16, -56, 16, -16, 40, -48, 32, -8, 40, 0, -40, 0, -32, -8, -40, -48)
+
+[node name="Hitbox" type="Area2D" parent="."]
+script = ExtResource("1_tb2qs")
+damage_data = SubResource("Resource_4iif5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_01hlq")

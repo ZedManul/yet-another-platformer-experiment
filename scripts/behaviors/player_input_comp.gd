@@ -11,4 +11,4 @@ func update() -> void:
 	
 	
 	cmd_bool[&"jump"] = Input.is_action_pressed("jump")
-	
+	cmd_bool[&"atk"] = Input.is_action_pressed("attack")
