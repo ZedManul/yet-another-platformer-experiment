@@ -1,10 +1,9 @@
-[gd_scene load_steps=65 format=3 uid="uid://cybupd33n8syi"]
+[gd_scene load_steps=61 format=3 uid="uid://cybupd33n8syi"]
 
 [ext_resource type="Script" uid="uid://dcc43rgpjme67" path="res://scripts/entities/character_controller.gd" id="1_ywqn2"]
 [ext_resource type="Script" uid="uid://duoxov3ulsixa" path="res://scripts/behaviors/player_input_comp.gd" id="2_txfw5"]
 [ext_resource type="Script" uid="uid://dp6w2mjncqdym" path="res://scripts/entities/character_display.gd" id="3_0ooug"]
 [ext_resource type="Shader" uid="uid://cnj2fgs1ctxu8" path="res://scripts/shaders/pixel_filtering.gdshader" id="3_2fi85"]
-[ext_resource type="PackedScene" uid="uid://bw0vjjgcbwh6b" path="res://scenes/entities/spell_bomb.tscn" id="3_iul0l"]
 [ext_resource type="Texture2D" uid="uid://bfworwpcsreik" path="res://assets/visual/test_gal.png" id="4_p57rn"]
 [ext_resource type="Script" uid="uid://du4f2uqso8evc" path="res://addons/soupik/modifications/soup_group.gd" id="5_x3fun"]
 [ext_resource type="Script" uid="uid://cc7wp8bjyjqeg" path="res://addons/soupik/modifications/soup_two_bone_ik.gd" id="6_jh4di"]
@@ -14,19 +13,15 @@
 [ext_resource type="Texture2D" uid="uid://k0pqb7a6neky" path="res://assets/visual/test_gal_hair3.png" id="8_2fi85"]
 [ext_resource type="Texture2D" uid="uid://c0g8ouuw2t655" path="res://assets/visual/test_gal_hair.png" id="9_p57rn"]
 [ext_resource type="Texture2D" uid="uid://daocj208kq1sp" path="res://assets/visual/test_gal_hair4.png" id="10_4ttu4"]
-[ext_resource type="Script" uid="uid://cqlnscxjvajtv" path="res://scripts/_debug/atk_indicator.gd" id="10_iwma6"]
-[ext_resource type="Script" uid="uid://cs1ppaa0jtewo" path="res://scripts/_debug/dash_indicator.gd" id="10_l5ahe"]
 [ext_resource type="Script" uid="uid://4sywd4r3ek53" path="res://scripts/components/hurtbox.gd" id="14_4ttu4"]
 [ext_resource type="Script" uid="uid://lo3ecvr55hka" path="res://scripts/components/hurtbox_subcomponents/hurtbox_subcomponent.gd" id="15_0ooug"]
 [ext_resource type="Script" uid="uid://dp14s2pow2p73" path="res://scripts/components/hurtbox_subcomponents/knockback_component.gd" id="16_0rkjd"]
 [ext_resource type="Script" uid="uid://1yi75nt2ecsh" path="res://scripts/components/hurtbox_subcomponents/health_component.gd" id="18_iul0l"]
 [ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="18_uojdb"]
-[ext_resource type="Script" uid="uid://duatesb2jlovw" path="res://scripts/_debug/_debug_charge_display.gd" id="22_iwma6"]
 
 [sub_resource type="Resource" id="Resource_tdgst"]
 resource_local_to_scene = true
 script = ExtResource("2_txfw5")
-aim_pivot = NodePath("AimPivot")
 metadata/_custom_type_script = "uid://duoxov3ulsixa"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4ttu4"]
@@ -2080,59 +2075,51 @@ _data = {
 &"slide_back": SubResource("Animation_4xcak")
 }
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hurtbox", "atk_hitbox", "atk_visual", "spell_bomb_origin")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("atk_hitbox", "atk_visual")]
 collision_layer = 0
 script = ExtResource("1_ywqn2")
 behavior = SubResource("Resource_tdgst")
-run_speed = 150.0
-accel_time = 0.1
-decel_time = 0.1
+run_speed = 200.0
+accel = 600.0
+decel = 900.0
+air_accel_efficiency = 0.5
 gravity = 700.0
 fall_boost = 2.0
-slam_speed = 500.0
-jump_height = 56.0
+jump_height = 48.0
 coyote_time = 0.1
 jump_buffer = 0.1
 flip_buffer_angle = 0.2617993877991494
-hurtbox = NodePath("Hurtbox")
-attack_cooldown = 0.4
-attack_buffer = 0.1
 attack_length = 0.1
-attack_recoil = 400.0
-grounded_recoil_coeff = Vector2(1.5, 0.5)
+attack_cooldown = 0.3
+attack_recoil = 300.0
+grounded_recoil_coeff = Vector2(1.5, 0)
 atk_hitbox = NodePath("HitBox")
 atk_visual = NodePath("HitBox/Polygon2D")
-spell_charge_pickup_radius = 32.0
-spell_bomb_scene = ExtResource("3_iul0l")
-spell_bomb_velocity = Vector2(0, -200)
-spell_bomb_origin = NodePath("SpellBombOrigin")
-dash_length = 0.15
 metadata/_custom_type_script = "uid://dcc43rgpjme67"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_4ttu4")
 
-[node name="Hurtbox" type="Area2D" parent="."]
-position = Vector2(0, -15)
-collision_layer = 2
-collision_mask = 4
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("exceptions")]
 script = ExtResource("14_4ttu4")
 subcomponents = Array[ExtResource("15_0ooug")]([SubResource("Resource_4xcak"), SubResource("Resource_uojdb")])
+exceptions = [NodePath("../HitBox")]
 invincibility_time = 0.2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_p57rn")
 debug_color = Color(0.9659663, 0, 0.48640293, 0.41960785)
 
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(5, 0, 5, 0, 5, -10, 6, -16, 6, -19, 2, -21, 2, -22, 5, -22, 5, -30, 3, -32, -4, -32, -4, -26, -1, -23, -2, -21, -5, -19, -5, -16, -4, -12, -7, 0, -5, 0, 2, -11, 1, -8, 3, 0)
+
 [node name="HitBox" type="Area2D" parent="."]
 position = Vector2(0, -15)
-collision_layer = 4
-collision_mask = 0
+monitorable = false
 script = ExtResource("18_uojdb")
 fixed_knockback = true
-knockback = Vector2(300, 0)
-ignored_teams = Array[int]([0])
 metadata/_custom_type_script = "uid://pp8lm1clk2ca"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HitBox"]
@@ -2143,27 +2130,7 @@ polygon = PackedVector2Array(1, -3, 49, -8, 60, -15, 43, -25, -4, -30)
 position = Vector2(0, 15)
 polygon = PackedVector2Array(1, -3, 49, -8, 60, -15, 43, -25, -16, -31, 33, -23, 44, -15, 36, -9)
 
-[node name="SpellBombOrigin" type="Marker2D" parent="."]
-position = Vector2(10, -19)
-
-[node name="AimPivot" type="Marker2D" parent="."]
-position = Vector2(0, -15)
-
-[node name="Polygon2D" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(5, 0, 5, 0, 5, -10, 6, -16, 6, -19, 2, -21, 2, -22, 5, -22, 5, -30, 3, -32, -4, -32, -4, -26, -1, -23, -2, -21, -5, -19, -5, -16, -4, -12, -7, 0, -5, 0, 2, -11, 1, -8, 3, 0)
-
-[node name="AtkIndicator" type="Polygon2D" parent="." node_paths=PackedStringArray("character")]
-polygon = PackedVector2Array(-5, -12, -33, -1, -15, -11, -13, -10, -6, -14)
-script = ExtResource("10_iwma6")
-character = NodePath("..")
-
-[node name="DashIndicator" type="Polygon2D" parent="." node_paths=PackedStringArray("character")]
-polygon = PackedVector2Array(-6, -21, -17, -29, -13, -23, -19, -23, -11, -20, -14, -16, -8, -18)
-script = ExtResource("10_l5ahe")
-character = NodePath("..")
-
 [node name="CharacterDisplay" type="Node2D" parent="." node_paths=PackedStringArray("player_node", "anim_tree", "ik_target_root", "face_sprite")]
-process_mode = 4
 visible = false
 scale = Vector2(0.5, 0.5)
 script = ExtResource("3_0ooug")
@@ -2189,9 +2156,9 @@ position = Vector2(3, -39)
 
 [node name="ForeArmR" type="Sprite2D" parent="CharacterDisplay/Sprites/ArmRGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(3.5033984, 7.7219543)
-rotation = 0.42907822
-scale = Vector2(0.99988383, 0.99988383)
+position = Vector2(2.7431536, 7.3071823)
+rotation = 0.81071305
+scale = Vector2(0.9998962, 0.9998962)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-2, -2)
@@ -2201,9 +2168,9 @@ region_rect = Rect2(14, 51, 11, 4)
 
 [node name="UpperArmR" type="Sprite2D" parent="CharacterDisplay/Sprites/ArmRGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(2.5589705, 0.78658676)
-rotation = 1.4354532
-scale = Vector2(0.9999005, 0.9999005)
+position = Vector2(1.8854041, 0.3604889)
+rotation = 1.4479423
+scale = Vector2(0.9999115, 0.9999115)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-3, -3)
@@ -2213,9 +2180,9 @@ region_rect = Rect2(1, 50, 11, 5)
 
 [node name="HandR" type="Sprite2D" parent="CharacterDisplay/Sprites/ArmRGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(10.77735, 11.0498295)
-rotation = 0.3939522
-scale = Vector2(0.99985224, 0.99985224)
+position = Vector2(8.2544365, 13.104809)
+rotation = 0.65737486
+scale = Vector2(0.9998682, 0.9998682)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(0, -3)
@@ -2228,9 +2195,9 @@ position = Vector2(2, -22)
 
 [node name="AnkleR" type="Sprite2D" parent="CharacterDisplay/Sprites/LegRGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(3.216958, 8.413372)
-rotation = 0.38865826
-scale = Vector2(0.99990255, 0.99990255)
+position = Vector2(6.988106, 9.200563)
+rotation = 0.20016277
+scale = Vector2(0.9999078, 0.9999078)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-3, -1)
@@ -2239,8 +2206,8 @@ region_rect = Rect2(9, 109, 6, 12)
 
 [node name="FootR" type="Sprite2D" parent="CharacterDisplay/Sprites/LegRGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(-0.57214355, 17.666653)
-scale = Vector2(0.9998683, 0.9998683)
+position = Vector2(5.0000005, 19.000002)
+scale = Vector2(0.99987626, 0.99987626)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-3, -1)
@@ -2249,9 +2216,9 @@ region_rect = Rect2(9, 123, 8, 4)
 
 [node name="ThighR" type="Sprite2D" parent="CharacterDisplay/Sprites/LegRGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(-3.0681815, -4.0957966)
-rotation = -0.4489748
-scale = Vector2(0.9999388, 0.9999388)
+position = Vector2(1.6866579, -3.7562256)
+rotation = -0.3717561
+scale = Vector2(0.9999425, 0.9999425)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-4, -3)
@@ -2263,9 +2230,9 @@ position = Vector2(0, -25)
 
 [node name="Body" type="Sprite2D" parent="CharacterDisplay/Sprites/BodyGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(2.850711, 0.6587143)
-rotation = 0.3503592
-scale = Vector2(0.99997395, 0.99997395)
+position = Vector2(2.2786808, -0.22405052)
+rotation = 0.22525375
+scale = Vector2(0.99997634, 0.99997634)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-8, -8)
@@ -2274,9 +2241,9 @@ region_rect = Rect2(2, 74, 10, 12)
 
 [node name="Torso" type="Sprite2D" parent="CharacterDisplay/Sprites/BodyGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(1.7491672, -5.067089)
-rotation = -0.035826705
-scale = Vector2(0.9999471, 0.9999471)
+position = Vector2(0.47127974, -5.767668)
+rotation = 0.032661572
+scale = Vector2(0.9999529, 0.9999529)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-5, -16)
@@ -2289,9 +2256,9 @@ position = Vector2(-3, -22)
 
 [node name="AnkleL" type="Sprite2D" parent="CharacterDisplay/Sprites/LegLGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(-0.9320545, 9.8344)
-rotation = 0.3756457
-scale = Vector2(0.9998804, 0.9998804)
+position = Vector2(-2.463832, 9.275129)
+rotation = 0.34875748
+scale = Vector2(0.9998922, 0.9998922)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-3, -1)
@@ -2300,9 +2267,9 @@ region_rect = Rect2(1, 109, 6, 12)
 
 [node name="ThighL" type="Sprite2D" parent="CharacterDisplay/Sprites/LegLGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(1.2365949, -4.0314713)
-rotation = 0.22645238
-scale = Vector2(0.99991006, 0.99991006)
+position = Vector2(-0.90097594, -4.6721535)
+rotation = 0.1828963
+scale = Vector2(0.99991965, 0.99991965)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-4, -3)
@@ -2311,9 +2278,9 @@ region_rect = Rect2(1, 88, 8, 19)
 
 [node name="FootL" type="Sprite2D" parent="CharacterDisplay/Sprites/LegLGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(-4.6003485, 19.135998)
-rotation = 0.036211886
-scale = Vector2(0.99985206, 0.99985206)
+position = Vector2(-5.880767, 18.672096)
+rotation = 0.033173915
+scale = Vector2(0.9998664, 0.9998664)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-3, -1)
@@ -2321,9 +2288,9 @@ region_enabled = true
 region_rect = Rect2(9, 123, 8, 4)
 
 [node name="HeadGroup" type="Node2D" parent="CharacterDisplay/Sprites"]
-position = Vector2(0.039405763, -43.02896)
-rotation = 0.08669243
-scale = Vector2(0.99991137, 0.99991137)
+position = Vector2(-0.15187949, -43.795418)
+rotation = 0.056793142
+scale = Vector2(0.9999202, 0.9999202)
 
 [node name="Forehead" type="Sprite2D" parent="CharacterDisplay/Sprites/HeadGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
@@ -2449,9 +2416,9 @@ position = Vector2(-6, -39)
 
 [node name="UpperArmL" type="Sprite2D" parent="CharacterDisplay/Sprites/ArmLGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(2.4302533, 0.11817932)
-rotation = -0.42599902
-scale = Vector2(0.99992007, 0.99992007)
+position = Vector2(1.7680421, -0.92578506)
+rotation = -0.68100643
+scale = Vector2(0.99992925, 0.99992925)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-9, -3)
@@ -2460,9 +2427,9 @@ region_rect = Rect2(1, 50, 11, 5)
 
 [node name="ForeArmL" type="Sprite2D" parent="CharacterDisplay/Sprites/ArmLGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(-3.9436216, 3.010563)
-rotation = -1.5282562
-scale = Vector2(0.9998999, 0.9998999)
+position = Vector2(-3.6701498, 3.4809303)
+rotation = -1.490965
+scale = Vector2(0.9999109, 0.9999109)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-9, -2)
@@ -2471,9 +2438,9 @@ region_rect = Rect2(14, 51, 11, 4)
 
 [node name="HandL" type="Sprite2D" parent="CharacterDisplay/Sprites/ArmLGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
-position = Vector2(-4.00531, 11.016912)
-rotation = -1.7918441
-scale = Vector2(0.9998692, 0.9998692)
+position = Vector2(-4.0302963, 11.479502)
+rotation = -1.9056844
+scale = Vector2(0.9998823, 0.9998823)
 texture = ExtResource("4_p57rn")
 centered = false
 offset = Vector2(-6, -4)
@@ -2564,7 +2531,7 @@ script = ExtResource("7_jh4di")
 target_node = NodePath("../../IKTargets/PelvisIK/PelvisLA")
 enabled = true
 bone_node = NodePath("../../PelvisBone")
-target_vector = Vector2(3.8322086, 1.400425)
+target_vector = Vector2(3.9531944, 0.9058447)
 metadata/_custom_type_script = "uid://b4u1tvhlw4d2g"
 
 [node name="SoupStayAt" type="Node" parent="CharacterDisplay/Skeleton2D/SoupGroup" node_paths=PackedStringArray("target_node", "bone_node")]
@@ -2572,7 +2539,7 @@ script = ExtResource("7_hr6cs")
 target_node = NodePath("../../IKTargets/PelvisIK")
 enabled = true
 bone_node = NodePath("../../PelvisBone")
-target_position = Vector2(0.48613054, -12.513869)
+target_position = Vector2(0.164626, -12.835374)
 metadata/_custom_type_script = "uid://b5uiivwxcoics"
 
 [node name="TorsoLookAt" type="Node" parent="CharacterDisplay/Skeleton2D/SoupGroup" node_paths=PackedStringArray("target_node", "bone_node")]
@@ -2588,7 +2555,7 @@ script = ExtResource("7_jh4di")
 target_node = NodePath("../../IKTargets/PelvisIK/HeadIK")
 enabled = true
 bone_node = NodePath("../../PelvisBone/TorsoBone/HeadBone")
-target_vector = Vector2(19.300287, 1.677393)
+target_vector = Vector2(21.237545, 1.2074451)
 metadata/_custom_type_script = "uid://b4u1tvhlw4d2g"
 
 [node name="LegGroup" type="Node" parent="CharacterDisplay/Skeleton2D/SoupGroup"]
@@ -2617,7 +2584,7 @@ script = ExtResource("7_jh4di")
 target_node = NodePath("../../../IKTargets/LegLIK/FootLA")
 enabled = true
 bone_node = NodePath("../../../PelvisBone/ThighLBone/AnkleLBone/FootLBone")
-target_vector = Vector2(4.9295697, 0.17858744)
+target_vector = Vector2(4.9403834, 0.16395187)
 metadata/_custom_type_script = "uid://b4u1tvhlw4d2g"
 
 [node name="FootRLookAt" type="Node" parent="CharacterDisplay/Skeleton2D/SoupGroup/LegGroup" node_paths=PackedStringArray("target_node", "bone_node")]
@@ -2625,7 +2592,7 @@ script = ExtResource("7_jh4di")
 target_node = NodePath("../../../IKTargets/LegRIK/FootRA")
 enabled = true
 bone_node = NodePath("../../../PelvisBone/ThighRBone/AnkleRBone/FootRBone")
-target_vector = Vector2(4.999999, 4.7683716e-07)
+target_vector = Vector2(5, -9.536743e-07)
 metadata/_custom_type_script = "uid://b4u1tvhlw4d2g"
 
 [node name="ArmGroup" type="Node" parent="CharacterDisplay/Skeleton2D/SoupGroup"]
@@ -2652,7 +2619,7 @@ script = ExtResource("7_jh4di")
 target_node = NodePath("../../../IKTargets/PelvisIK/ArmLIK/HandLA")
 enabled = true
 bone_node = NodePath("../../../PelvisBone/TorsoBone/UpperArmLBone/ForeArmLBone/HandLBone")
-target_vector = Vector2(1.2274415, 5.462099)
+target_vector = Vector2(1.8740816, 5.3853636)
 metadata/_custom_type_script = "uid://b4u1tvhlw4d2g"
 
 [node name="HandRLookAt" type="Node" parent="CharacterDisplay/Skeleton2D/SoupGroup/ArmGroup" node_paths=PackedStringArray("target_node", "bone_node")]
@@ -2660,13 +2627,13 @@ script = ExtResource("7_jh4di")
 target_node = NodePath("../../../IKTargets/PelvisIK/ArmRIK/HandRA")
 enabled = true
 bone_node = NodePath("../../../PelvisBone/TorsoBone/UpperArmRBone/ForeArmRBone/HandRBone")
-target_vector = Vector2(4.5999336, 1.9121113)
+target_vector = Vector2(4.419612, 3.4115295)
 metadata/_custom_type_script = "uid://b4u1tvhlw4d2g"
 
 [node name="PelvisBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D"]
-position = Vector2(0.9722611, -25.027739)
-rotation = 0.3503592
-scale = Vector2(0.99997395, 0.99997395)
+position = Vector2(0.329252, -25.670748)
+rotation = 0.22525375
+scale = Vector2(0.99997634, 0.99997634)
 rest = Transform2D(0.9999936, 0, 0, 0.9999936, 0, -27)
 auto_calculate_length_and_angle = false
 length = 2.0
@@ -2674,20 +2641,20 @@ bone_angle = 0.0
 
 [node name="ThighRBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone"]
 position = Vector2(-3.00001, -1)
-rotation = -0.799334
-scale = Vector2(0.9999648, 0.9999648)
+rotation = -0.59700984
+scale = Vector2(0.99996614, 0.99996614)
 rest = Transform2D(0.9986037, 0.052511804, -0.052511804, 0.9986037, -3.00001, -1)
 
 [node name="AnkleRBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/ThighRBone"]
 position = Vector2(0.232738, 14.9983)
-rotation = 0.8376331
-scale = Vector2(0.99996376, 0.99996376)
+rotation = 0.5719189
+scale = Vector2(0.99996537, 0.99996537)
 rest = Transform2D(0.9998591, -0.015515455, 0.015515455, 0.9998591, 0.232738, 14.9983)
 
 [node name="FootRBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/ThighRBone/AnkleRBone"]
 position = Vector2(0, 10)
-rotation = -0.38865805
-scale = Vector2(0.99996567, 0.99996567)
+rotation = -0.20016295
+scale = Vector2(0.9999684, 0.9999684)
 rest = Transform2D(0.9866416, 0.16281487, -0.16281487, 0.9866416, 0, 10)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2707,20 +2674,20 @@ remote_path = NodePath("../../../../Sprites/LegRGroup/ThighR")
 
 [node name="ThighLBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone"]
 position = Vector2(-3.00001, -1)
-rotation = -0.12390681
-scale = Vector2(0.9999361, 0.9999361)
+rotation = -0.042357445
+scale = Vector2(0.99994326, 0.99994326)
 rest = Transform2D(0.99501324, 0.09959173, -0.09959173, 0.99501324, -3.00001, -1)
 
 [node name="AnkleLBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/ThighLBone"]
 position = Vector2(0.96216, 14.9993)
-rotation = 0.1491933
-scale = Vector2(0.9999703, 0.9999703)
+rotation = 0.16586122
+scale = Vector2(0.9999725, 0.9999725)
 rest = Transform2D(0.9979372, -0.06401457, 0.06401457, 0.9979372, 0.96216, 14.9993)
 
 [node name="FootLBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/ThighLBone/AnkleLBone"]
 position = Vector2(0, 10)
-rotation = -0.33943382
-scale = Vector2(0.9999717, 0.9999717)
+rotation = -0.31558356
+scale = Vector2(0.9999742, 0.9999742)
 rest = Transform2D(0.9670262, 0.2546307, -0.2546307, 0.9670262, 0, 10)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2740,8 +2707,8 @@ remote_path = NodePath("../../../../Sprites/LegLGroup/ThighL")
 
 [node name="TorsoBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone"]
 position = Vector2(-1, -5)
-rotation = -0.3861859
-scale = Vector2(0.9999732, 0.9999732)
+rotation = -0.19259217
+scale = Vector2(0.9999765, 0.9999765)
 rest = Transform2D(0.9999936, 0, 0, 0.9999936, -1, -5)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2749,8 +2716,8 @@ bone_angle = 0.0
 
 [node name="HeadBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone"]
 position = Vector2(-1.0000191, -15.000224)
-rotation = 0.12251914
-scale = Vector2(0.99996424, 0.99996424)
+rotation = 0.024131568
+scale = Vector2(0.99996734, 0.99996734)
 rest = Transform2D(0.9993544, -0.035691362, 0.035691362, 0.9993544, -1.0000191, -15.000224)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2763,20 +2730,20 @@ metadata/_edit_lock_ = true
 
 [node name="UpperArmLBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone"]
 position = Vector2(-5.00003, -9.00007)
-rotation = -0.39017233
-scale = Vector2(0.99997294, 0.99997294)
+rotation = -0.713668
+scale = Vector2(0.99997634, 0.99997634)
 rest = Transform2D(0.9894613, 0.14474405, -0.14474405, 0.9894613, -5.00003, -9.00007)
 
 [node name="ForeArmLBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone/UpperArmLBone"]
 position = Vector2(-7, 0)
-rotation = -1.1022571
-scale = Vector2(0.9999798, 0.9999798)
+rotation = -0.8099586
+scale = Vector2(0.99998164, 0.99998164)
 rest = Transform2D(0.94644314, -0.32285044, 0.32285044, 0.94644314, -7, 0)
 
 [node name="HandLBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone/UpperArmLBone/ForeArmLBone"]
 position = Vector2(-8.00253, 0.278884)
-rotation = -0.26358795
-scale = Vector2(0.9999693, 0.9999693)
+rotation = -0.4147193
+scale = Vector2(0.9999714, 0.9999714)
 rest = Transform2D(-0.9768848, -0.21370281, 0.21370281, -0.9768848, -8.00253, 0.278884)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2796,20 +2763,20 @@ metadata/_edit_lock_ = true
 
 [node name="UpperArmRBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone"]
 position = Vector2(4.00002, -9.00007)
-rotation = 1.4712799
-scale = Vector2(0.9999534, 0.9999534)
+rotation = 1.4152807
+scale = Vector2(0.9999586, 0.9999586)
 rest = Transform2D(0.9999879, -3.4678765e-06, 3.4678765e-06, 0.9999879, 4.00002, -9.00007)
 
 [node name="ForeArmRBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone/UpperArmRBone"]
 position = Vector2(8.00008, 0)
-rotation = -1.006375
-scale = Vector2(0.9999834, 0.9999834)
+rotation = -0.63722914
+scale = Vector2(0.99998474, 0.99998474)
 rest = Transform2D(0.9999945, -7.42889e-08, 7.42889e-08, 0.9999945, 8.00008, 0)
 
 [node name="HandRBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone/UpperArmRBone/ForeArmRBone"]
 position = Vector2(8, 0)
-rotation = -0.03512605
-scale = Vector2(0.9999684, 0.9999684)
+rotation = -0.15333822
+scale = Vector2(0.999972, 0.999972)
 rest = Transform2D(0.9999925, 2.1117146e-06, -2.1117146e-06, 0.9999925, 8, 0)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2833,15 +2800,3 @@ remote_path = NodePath("../../../../Sprites/BodyGroup/Torso")
 [node name="BodyRT" type="RemoteTransform2D" parent="CharacterDisplay/Skeleton2D/PelvisBone"]
 position = Vector2(2, 0)
 remote_path = NodePath("../../../Sprites/BodyGroup/Body")
-
-[node name="ProgressBar" type="Label" parent="." node_paths=PackedStringArray("player")]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -16.0
-offset_right = 16.0
-offset_bottom = 23.0
-grow_horizontal = 2
-horizontal_alignment = 1
-script = ExtResource("22_iwma6")
-player = NodePath("..")

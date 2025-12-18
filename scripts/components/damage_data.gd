@@ -17,4 +17,18 @@ var scale: Vector2
 var rotation: float
 
 func _init():
-   resource_local_to_scene = true
+	resource_local_to_scene = true
+
+func calc_fixed_knockback(owner: Node2D) -> Vector2:
+	if not fixed_knockback: return Vector2.ZERO
+	
+	var result: Vector2
+	result = knockback
+	
+	if not transform_knockback: return result
+	
+	result *= (scale if scale_knockback 
+			else scale.sign()
+			)
+	
+	return result.rotated(rotation)

@@ -2093,20 +2093,19 @@ slam_speed = 500.0
 jump_height = 56.0
 coyote_time = 0.1
 jump_buffer = 0.1
+dash_length = 0.15
 flip_buffer_angle = 0.2617993877991494
 hurtbox = NodePath("Hurtbox")
-attack_cooldown = 0.4
+attack_cooldown = 0.3
 attack_buffer = 0.1
 attack_length = 0.1
 attack_recoil = 400.0
 grounded_recoil_coeff = Vector2(1.5, 0.5)
 atk_hitbox = NodePath("HitBox")
 atk_visual = NodePath("HitBox/Polygon2D")
-spell_charge_pickup_radius = 32.0
 spell_bomb_scene = ExtResource("3_iul0l")
-spell_bomb_velocity = Vector2(0, -200)
+spell_bomb_velocity = Vector2(100, -200)
 spell_bomb_origin = NodePath("SpellBombOrigin")
-dash_length = 0.15
 metadata/_custom_type_script = "uid://dcc43rgpjme67"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -2321,9 +2320,9 @@ region_enabled = true
 region_rect = Rect2(9, 123, 8, 4)
 
 [node name="HeadGroup" type="Node2D" parent="CharacterDisplay/Sprites"]
-position = Vector2(0.039405763, -43.02896)
-rotation = 0.08669243
-scale = Vector2(0.99991137, 0.99991137)
+position = Vector2(0.039405733, -43.02896)
+rotation = 0.08669245
+scale = Vector2(0.9999113, 0.9999113)
 
 [node name="Forehead" type="Sprite2D" parent="CharacterDisplay/Sprites/HeadGroup"]
 material = SubResource("ShaderMaterial_8ykbp")
@@ -2749,8 +2748,8 @@ bone_angle = 0.0
 
 [node name="HeadBone" type="Bone2D" parent="CharacterDisplay/Skeleton2D/PelvisBone/TorsoBone"]
 position = Vector2(-1.0000191, -15.000224)
-rotation = 0.12251914
-scale = Vector2(0.99996424, 0.99996424)
+rotation = 0.12251916
+scale = Vector2(0.9999642, 0.9999642)
 rest = Transform2D(0.9993544, -0.035691362, 0.035691362, 0.9993544, -1.0000191, -15.000224)
 auto_calculate_length_and_angle = false
 length = 4.0
@@ -2842,6 +2841,5 @@ offset_left = -16.0
 offset_right = 16.0
 offset_bottom = 23.0
 grow_horizontal = 2
-horizontal_alignment = 1
 script = ExtResource("22_iwma6")
 player = NodePath("..")

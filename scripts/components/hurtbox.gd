@@ -1,49 +1,54 @@
 class_name HurtBox extends Area2D
 
+signal on_hurt(hitbox: HitBox, hurtbox: HurtBox)
+
+enum TEAM {
+	PLAYER,
+	ENEMY,
+	ENVIRONMENT,
+}
+
+
 @export var enabled: bool = true
 @export var subcomponents: Array[HurtBoxSubcomponent]
-@export var exceptions: Array[HitBox]
+@export var team: TEAM
 @export_group("Invincibility Frames")
 @export var invincibility_time: float = 0.5 # seconds
-
-var inv_time_left: float 
-var hitboxes: Array[HitBox]
-
-
-func _ready() -> void:
-	monitoring = true
-	monitorable = false
-	area_entered.connect(_on_area_entered)
-	area_exited.connect(_on_area_exited)
+var invincibility_timers: Dictionary[int, float]
 
 
 func _physics_process(delta: float) -> void:
 	process_timers(delta)
-	if inv_time_left > 0.0 or not enabled: return
+	if not enabled: return
 	process_hit()
 
 
 func process_hit() -> void:
+	var hitboxes: Array[HitBox] 
+	for area: Area2D in get_overlapping_areas():
+		if not area is HitBox: continue
+		hitboxes.append(area)
 	if hitboxes.is_empty(): return
-	inv_time_left = invincibility_time
-	for hitbox in hitboxes:
+	for hitbox: HitBox in hitboxes:
+		if hitbox.exceptions.has(self): continue
+		if hitbox.ignored_teams.has(team): continue
+		if invincibility_timers.keys().has(hitbox.get_instance_id()): return
+		invincibility_timers[hitbox.get_instance_id()] = invincibility_time
 		hitbox.on_hit.emit(hitbox,self)
+		on_hurt.emit(hitbox,self)
 		for comp in subcomponents:
-			if comp.process(self,hitbox.damage_data): break
+			if comp.process(self,hitbox): break
+
 
 
 func process_timers(delta: float) -> void:
-	inv_time_left = max(0.0, inv_time_left - delta)
-
-
-func _on_area_entered(area: Area2D) -> void:
-	if not (area is HitBox): return
-	if area in exceptions: return
-	if area in hitboxes: return
-	hitboxes.append(area)
-
-
-func _on_area_exited(area: Area2D) -> void:
-	if not area in hitboxes: return
-	var hitbox_idx: int = hitboxes.find(area)
-	hitboxes.remove_at(hitbox_idx)
+	var expired: Array[int]
+	for hb in invincibility_timers.keys():
+		invincibility_timers[hb]-=delta
+		if invincibility_timers[hb]<=0:
+			expired.append(hb)
+	
+	for hb in expired:
+		invincibility_timers.erase(hb)
+	expired.clear()
+	

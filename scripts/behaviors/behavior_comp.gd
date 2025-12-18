@@ -10,7 +10,10 @@ var cmd_direction: Dictionary[StringName, Vector2] = {
 
 var cmd_bool: Dictionary [StringName, bool] = {
 	&"atk" : false,
-	&"jump" : false
+	&"atk_2" : false,
+	&"atk_3" : false,
+	&"jump" : false,
+	&"dash" : false
 }
 
 var cmd_float: Dictionary [StringName, float]

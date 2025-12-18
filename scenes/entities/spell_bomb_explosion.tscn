@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://cex5xaffjwogv"]
+
+[ext_resource type="Script" uid="uid://c38cmyhratqlp" path="res://scripts/entities/spell_bomb_explosion.gd" id="1_n8ql4"]
+[ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="2_rm6nt"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n8ql4"]
+radius = 32.0
+
+[sub_resource type="Gradient" id="Gradient_n8ql4"]
+offsets = PackedFloat32Array(0, 0.03992016, 0.46906188, 0.53093815, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0.9560878, 1, 1, 1, 0.15934807, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rm6nt"]
+gradient = SubResource("Gradient_n8ql4")
+width = 128
+height = 128
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+metadata/_snap_enabled = true
+
+[node name="SpellBombExplosion" type="Area2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_n8ql4")
+enabled = true
+fixed_knockback = true
+knockback = Vector2(0, -300)
+dynamic_knockback = true
+knockback_strength = 300.0
+knockback_ratio = Vector2(1, 0)
+metadata/_custom_type_script = "uid://pp8lm1clk2ca"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_n8ql4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_rm6nt")
+
+[node name="DamagingHitBox" type="Area2D" parent="."]
+script = ExtResource("2_rm6nt")
+enabled = true
+damage = 2.0
+ignored_teams = Array[int]([0])
+metadata/_custom_type_script = "uid://pp8lm1clk2ca"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamagingHitBox"]
+shape = SubResource("CircleShape2D_n8ql4")
