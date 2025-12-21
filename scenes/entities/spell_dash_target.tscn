@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnww4ysj5etyh"]
+
+[ext_resource type="Script" uid="uid://cqaa2fcn86ue6" path="res://scripts/entities/spell_dash_target.gd" id="1_qucln"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qucln"]
+radius = 14.0
+
+[node name="SpellDashTarget" type="Area2D" node_paths=PackedStringArray("tether_line")]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_qucln")
+tether_line = NodePath("Line2D")
+enabled = true
+damage = 1.0
+fixed_knockback = true
+knockback = Vector2(-300, 0)
+ignored_teams = Array[int]([0, 3])
+metadata/_custom_type_script = "uid://cqaa2fcn86ue6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qucln")
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 2.0
+
+[node name="Polygon2D4" type="Polygon2D" parent="."]
+rotation = -1.5707964
+polygon = PackedVector2Array(3, 1.0000001, 7, 3.059797e-07, 3, -0.9999999, 2, -1.9999999, 1.7484555e-07, -4, -1.9999999, -2, -3, -1.0000001, -7, -3.059797e-07, -3, 0.9999999, -1.0000001, 3, -3.934025e-07, 9, 0.9999999, 3)
+
+[node name="Polygon2D" type="Polygon2D" parent="Polygon2D4"]
+rotation = 1.5707964
+color = Color(0.6833334, 0, 1, 1)
+polygon = PackedVector2Array(3, 0, 0, -3, -3, 0, 0, 3)

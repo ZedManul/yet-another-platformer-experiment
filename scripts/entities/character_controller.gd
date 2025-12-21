@@ -42,7 +42,7 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export_subgroup("Direction")
 @export_range(0.0, 90.0, 5.0, "radians_as_degrees") var flip_buffer_angle: float = 0.0
 
-@export_group("Attacks")
+@export_group("Combat")
 @export var hurtbox: HurtBox
 @export var attack_cooldown: float
 @export var attack_buffer: float
@@ -55,6 +55,7 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export var atk_visual: Node2D
 
 @export_subgroup("Spell Resource")
+@export var spell_pickup_scene: PackedScene
 @export var max_spell_charges: int = 3
 @export var spell_charge_pickup_radius: float = 96
 @export var force_recall_time: float = 2.0
@@ -66,27 +67,45 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export var spell_bomb_origin: Node2D
 
 @export_subgroup("Spell Dash")
-@export var dash_momentum: Vector2 = Vector2(400.0,0.0)
-@export var dash_length: float = 0.2
-@export var dash_cooldown: float = 1.0
+@export var dash_target_scene: PackedScene
+@export var dash_raycast: RayCast2D
+@export var dash_velocity: float = 400.0
+@export var dash_delay: float = 1.0
+@export var dash_exit_velocity: Vector2 = Vector2(100.0,-200.0)
+@export var dash_pickup_eject_velocity: float = 300
 
 
+
+var dash_target_instance: SpellDashTarget
 var coyote_time_left: float
 var jump_buffer_left: float
-var attack_time_left: float
+var attack_time_left: float	
 var attack_cooldown_left: float
 var attack_buffer_left: float
-var dash_time_left: float
-var dash_cooldown_left: float
+var dash_time_left: float:
+	set(value):
+		dash_time_just_expired = (dash_time_left > 0 and value <= 0) or dash_time_just_expired
+		dash_time_left = value
+var dash_delay_left: float:
+	set(value):
+		dash_delay_just_expired = (dash_delay_left > 0 and value <= 0) or dash_delay_just_expired
+		dash_delay_left = value
+
+var dash_time_just_expired: bool = false
+var dash_delay_just_expired: bool = false
 
 var just_jumped: bool = false
 var jump_impulse: float
 var decel: float
 var accel: float
 var orient: float = 1.0
-var dash_direction: float = 1.0
+var dash_vector: Vector2
 
-var spell_charges: int = max_spell_charges
+
+var spell_charges: int = max_spell_charges:
+	set(value):
+		spell_charges = value
+		force_recall_time_left = force_recall_time
 var spell_charge_pickups: Array[SpellPickup]
 var force_recall_time_left = 0.0
 
@@ -108,11 +127,12 @@ func _physics_process(delta: float) -> void:
 	_process_flip() 
 	_process_gravity(delta)
 	_process_run(delta)
-	#_process_dash(delta)
 	_process_jump()
 	_process_spell_bomb()
 	_process_attack()
+	_process_spell_dash()
 	move_and_slide()
+	_update_expirations()
 
 
 func _process_timers(delta) -> void:
@@ -121,10 +141,13 @@ func _process_timers(delta) -> void:
 	attack_time_left = move_toward(attack_time_left, 0, delta)
 	attack_cooldown_left = move_toward(attack_cooldown_left, 0, delta)
 	dash_time_left = move_toward(dash_time_left, 0, delta)
-	dash_cooldown_left = move_toward(dash_cooldown_left, 0, delta)
+	dash_delay_left = move_toward(dash_delay_left, 0, delta)
 	attack_buffer_left = move_toward(attack_buffer_left, 0, delta)
 	force_recall_time_left = move_toward(force_recall_time_left, 0, delta)
 
+func _update_expirations() -> void:
+	dash_time_just_expired = false
+	dash_delay_just_expired = false
 
 func _process_gravity(delta) -> void:
 	var slam_just_pressed: bool = behavior.cmd_direction[&"move"].y>0 and not behavior.prev_cmd_direction[&"move"].y>0
@@ -177,8 +200,6 @@ func _process_attack()-> void:
 	if behavior.cmd_bool[&"atk"] and not behavior.prev_cmd_bool[&"atk"]:
 		attack_buffer_left = attack_buffer
 	
-	
-	
 	if attack_time_left > 0:
 		return
 	
@@ -212,18 +233,40 @@ func _process_spell_bomb() -> void:
 	if hurtbox:
 		(bomb_instance as SpellBomb).exceptions.append(hurtbox)
 
-
-#func _process_dash(_delta)-> void:
-	#var dash_input_just_pressed = behavior.cmd_bool[&"dash"] and not behavior.prev_cmd_bool[&"dash"]
-	#
-	#if dash_time_left>0:
-		#velocity = dash_momentum * Vector2(dash_direction,1.0)
-	#
-	#if behavior.cmd_direction[&"move"].x == 0 or not dash_input_just_pressed or dash_cooldown_left>0: return
-	#
-	#dash_direction = sign(behavior.cmd_direction[&"move"].x)
-	#dash_cooldown_left = dash_cooldown
-	#dash_time_left = dash_length
+func _process_spell_dash() -> void:
+	if dash_time_just_expired:
+		velocity = dash_exit_velocity * Vector2(orient, 1)
+		spawn_spell_pickup(dash_target_instance.global_position, 
+				-Vector2.from_angle(dash_target_instance.global_rotation) * dash_pickup_eject_velocity)
+		dash_target_instance.queue_free()
+		dash_target_instance = null
+	if dash_time_left > 0:
+		velocity = (dash_target_instance.global_position - dash_raycast.global_position).normalized() * dash_velocity
+		return
+	if dash_delay_just_expired:
+		dash_time_left = dash_vector.length()/dash_velocity;
+	if  dash_delay_left > 0:
+		velocity = Vector2.ZERO
+		return
+	
+	if spell_charges <= 0 or dash_time_left > 0: return
+	if not dash_raycast: return
+	var attack_input_just_pressed = behavior.cmd_bool[&"atk_3"] and not behavior.prev_cmd_bool[&"atk_3"]
+	if not attack_input_just_pressed: return
+	dash_raycast.global_rotation = behavior.cmd_direction[&"aim"].angle()
+	dash_raycast.force_update_transform()
+	dash_raycast.force_raycast_update()
+	dash_delay_left = dash_delay
+	spell_charges -= 1
+	if dash_raycast.is_colliding():
+		dash_vector = dash_raycast.get_collision_point() - dash_raycast.global_position
+	else:
+		dash_vector = dash_raycast.to_global(dash_raycast.target_position) - dash_raycast.global_position
+	dash_target_instance = dash_target_scene.instantiate()
+	get_tree().get_first_node_in_group(&"GameRoot").add_child(dash_target_instance)
+	dash_target_instance.global_position = dash_raycast.global_position + dash_vector
+	dash_target_instance.global_rotation = dash_raycast.global_rotation
+	dash_target_instance.spell_owner = self
 
 func _process_charge_pickups() -> void:
 	var picked_up: Array[SpellPickup]
@@ -259,3 +302,12 @@ func _on_attack_hit(hitbox: HitBox, _hurtbox: HurtBox) -> void:
 
 func _on_hurt(_hitbox: HitBox, _hurtbox: HurtBox) -> void:
 	dash_time_left = 0.0
+
+
+func spawn_spell_pickup(coords: Vector2, _velocity: Vector2) -> void: 
+	var spell_pickup: SpellPickup = spell_pickup_scene.instantiate()
+	get_tree().get_first_node_in_group(&"GameRoot").add_child(spell_pickup)
+	spell_pickup.global_position = coords
+	spell_pickup.velocity = _velocity
+	spell_pickup.rotation = randf() * PI
+	spell_charge_pickups.append(spell_pickup)

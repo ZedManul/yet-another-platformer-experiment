@@ -56,12 +56,7 @@ func explode(coords: Vector2) -> void:
 	explosion.global_position = coords
 	beam_raycast.add_exception(explosion)
 	
-	var spell_pickup: SpellPickup = spell_pickup_scene.instantiate()
-	get_tree().get_first_node_in_group(&"GameRoot").add_child(spell_pickup)
-	spell_pickup.global_position = coords
-	spell_pickup.velocity = velocity
-	spell_pickup.rotation = randf() * PI
-	spell_owner.spell_charge_pickups.append(spell_pickup)
+	spell_owner.spawn_spell_pickup(coords,velocity)
 
 func _on_body_entered(body: Node2D) -> void:
 	explode.call_deferred(global_position)
@@ -74,4 +69,5 @@ func _on_area_entered(area: Area2D) -> void:
 		explode.call_deferred(global_position)
 		queue_free()
 		return
+	if (area as HitBox).ignored_teams.has(HurtBox.TEAM.COMBO_PROJECTILES): return
 	beam(area)
