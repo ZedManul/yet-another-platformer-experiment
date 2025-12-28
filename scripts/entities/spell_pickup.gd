@@ -16,6 +16,10 @@ func _physics_process(delta: float) -> void:
 	activation_delay_left = move_toward(activation_delay_left,0.0,delta)
 	velocity += gravity * delta
 	velocity *= pow(friction,delta)
+	
+	if !velocity.is_zero_approx(): global_rotation = velocity.angle()
+	
 	move_and_slide()
+	
 	if activation_delay_left > 0: return
 	activity_indicator.show()

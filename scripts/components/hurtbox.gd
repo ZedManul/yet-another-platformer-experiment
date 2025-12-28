@@ -1,6 +1,6 @@
 class_name HurtBox extends Area2D
 
-signal on_hurt(hitbox: HitBox, hurtbox: HurtBox)
+signal hurt(hitbox: HitBox, hurtbox: HurtBox)
 
 enum TEAM {
 	PLAYER,
@@ -35,8 +35,8 @@ func process_hit() -> void:
 		if hitbox.ignored_teams.has(team): continue
 		if invincibility_timers.keys().has(hitbox.get_instance_id()): return
 		invincibility_timers[hitbox.get_instance_id()] = invincibility_time
-		hitbox.on_hit.emit(hitbox,self)
-		on_hurt.emit(hitbox,self)
+		hitbox.hit.emit(hitbox,self)
+		hurt.emit(hitbox,self)
 		for comp in subcomponents:
 			if comp.process(self,hitbox): break
 

@@ -1,12 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bw0vjjgcbwh6b"]
+[gd_scene load_steps=10 format=3 uid="uid://bw0vjjgcbwh6b"]
 
-[ext_resource type="Script" uid="uid://bied1vai4wify" path="res://scripts/entities/spell_bomb.gd" id="1_g8bma"]
-[ext_resource type="Script" uid="uid://7molth4koagu" path="res://addons/trail_2d/trail_2d.gd" id="2_0bxpt"]
-[ext_resource type="PackedScene" uid="uid://cex5xaffjwogv" path="res://scenes/entities/spell_bomb_explosion.tscn" id="2_dvbq4"]
-[ext_resource type="Script" uid="uid://dsc72ow8ic3gu" path="res://scripts/_debug/beam_line_display.gd" id="3_6t0un"]
-[ext_resource type="PackedScene" uid="uid://cbesjjuma00yp" path="res://scenes/entities/spell_pickup.tscn" id="3_7436n"]
-[ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="4_hyexc"]
-[ext_resource type="Script" uid="uid://d3ktllfkhh6o0" path="res://scripts/components/hitbox_beamifier.gd" id="6_7436n"]
+[ext_resource type="Script" uid="uid://bied1vai4wify" path="res://scripts/entities/spell_bomb.gd" id="1_wdvi8"]
+[ext_resource type="PackedScene" uid="uid://cex5xaffjwogv" path="res://scenes/entities/player_grenade_explosion.tscn" id="2_4rnb5"]
+[ext_resource type="Script" uid="uid://7molth4koagu" path="res://addons/trail_2d/trail_2d.gd" id="3_34xxm"]
+[ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="4_ahs6w"]
+[ext_resource type="Script" uid="uid://d3ktllfkhh6o0" path="res://scripts/components/hitbox_beamifier.gd" id="5_23twt"]
+[ext_resource type="Script" uid="uid://dsc72ow8ic3gu" path="res://scripts/_debug/beam_line_display.gd" id="6_avod8"]
 
 [sub_resource type="Curve" id="Curve_0bxpt"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -18,15 +17,15 @@ radius = 6.0
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qtirk"]
 radius = 3.0
 
-[node name="SpellBomb" type="Area2D" node_paths=PackedStringArray("beam_visual", "beam_raycast", "beam_hitbox")]
+[node name="PlayerGrenade" type="Area2D" node_paths=PackedStringArray("beam_visual", "beam_raycast", "beam_hitbox")]
 collision_layer = 0
 collision_mask = 7
-script = ExtResource("1_g8bma")
+script = ExtResource("1_wdvi8")
 beam_visual = NodePath("RayCast2D/Line2D")
 beam_raycast = NodePath("RayCast2D")
 beam_hitbox = NodePath("RayCast2D/RayBox")
-spell_explosion_scene = ExtResource("2_dvbq4")
-spell_pickup_scene = ExtResource("3_7436n")
+spell_explosion_scene = ExtResource("2_4rnb5")
+team = 3
 
 [node name="Trail2D" type="Line2D" parent="."]
 width = 4.0
@@ -35,7 +34,7 @@ default_color = Color(0.68235296, 0, 1, 1)
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
-script = ExtResource("2_0bxpt")
+script = ExtResource("3_34xxm")
 metadata/_custom_type_script = "uid://7molth4koagu"
 
 [node name="Polygon2D4" type="Polygon2D" parent="."]
@@ -58,7 +57,7 @@ collide_with_areas = true
 [node name="RayBox" type="Area2D" parent="RayCast2D"]
 collision_layer = 4
 collision_mask = 0
-script = ExtResource("4_hyexc")
+script = ExtResource("4_ahs6w")
 damage = 2.0
 knockback_velocity_multiplier = 1.0
 fixed_knockback = true
@@ -69,7 +68,7 @@ metadata/_custom_type_script = "uid://pp8lm1clk2ca"
 [node name="HitboxBeamShape" type="CollisionShape2D" parent="RayCast2D/RayBox" node_paths=PackedStringArray("raycast")]
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_qtirk")
-script = ExtResource("6_7436n")
+script = ExtResource("5_23twt")
 raycast = NodePath("../..")
 metadata/_custom_type_script = "uid://d3ktllfkhh6o0"
 
@@ -79,5 +78,5 @@ points = PackedVector2Array(0, 0, 18, 0)
 width = 6.0
 begin_cap_mode = 2
 end_cap_mode = 2
-script = ExtResource("3_6t0un")
+script = ExtResource("6_avod8")
 raycast = NodePath("..")

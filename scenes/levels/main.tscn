@@ -80,26 +80,28 @@ metadata/_edit_lock_ = true
 [node name="PlayerBot" parent="." instance=ExtResource("5_b6bv0")]
 position = Vector2(164, 144)
 behavior = SubResource("Resource_vkq25")
-attack_recoil = 200.0
 
 [node name="Camera2D" type="Camera2D" parent="PlayerBot"]
 position = Vector2(0, -53)
-zoom = Vector2(1.2, 1.2)
+process_callback = 0
 limit_enabled = false
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+drag_horizontal_enabled = true
+drag_left_margin = 0.05
+drag_right_margin = 0.05
 
 [node name="PlayerBot2" parent="." instance=ExtResource("5_b6bv0")]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(442, 155)
 behavior = SubResource("Resource_7lrji")
 team = 1
-spell_bomb_velocity = Vector2(0, 0)
 
 [node name="PlayerBot3" parent="." instance=ExtResource("5_b6bv0")]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(604, 2)
 behavior = SubResource("Resource_rssyh")
 team = 1
-spell_bomb_velocity = Vector2(0, 0)
 
 [node name="Spoik" parent="." instance=ExtResource("7_ubwgw")]
 position = Vector2(357, 160)

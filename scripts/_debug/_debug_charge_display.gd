@@ -5,5 +5,5 @@ extends Label
 func _physics_process(delta: float) -> void:
 	if not player: return
 	text = ""
-	for i in range(player.spell_charges):
+	for i in range(player.ammo):
 		text += "・"

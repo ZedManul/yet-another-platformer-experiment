@@ -1,4 +1,4 @@
-class_name SpellBomb extends Area2D
+class_name ComboGrenade extends HurtBox
 
 @export var fall_gravity: float = 1000.0
 @export var beam_time: float = 0.05
@@ -6,7 +6,6 @@ class_name SpellBomb extends Area2D
 @export var beam_raycast: RayCast2D
 @export var beam_hitbox: HitBox
 @export var spell_explosion_scene: PackedScene
-@export var spell_pickup_scene: PackedScene
 
 var beam_time_left: float = 0.0
 var beamed: bool = false
@@ -14,14 +13,14 @@ var exploded: bool = false
 
 var exceptions: Array[Area2D]
 var velocity: Vector2 = Vector2.ZERO
-var spell_owner: PlatformerCharacterController 	
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
-	area_entered.connect(_on_area_entered)
+	hurt.connect(_on_hurt)
 
 
 func _physics_process(delta: float) -> void:
+	super(delta)
 	if not beamed:
 		velocity.y += fall_gravity * delta
 		global_position += velocity * delta
@@ -56,18 +55,11 @@ func explode(coords: Vector2) -> void:
 	explosion.global_position = coords
 	beam_raycast.add_exception(explosion)
 	
-	spell_owner.spawn_spell_pickup(coords,velocity)
 
 func _on_body_entered(body: Node2D) -> void:
 	explode.call_deferred(global_position)
 	queue_free()
 
 
-func _on_area_entered(area: Area2D) -> void:
-	if exceptions.has(area): return
-	if not area is HitBox:
-		explode.call_deferred(global_position)
-		queue_free()
-		return
-	if (area as HitBox).ignored_teams.has(HurtBox.TEAM.COMBO_PROJECTILES): return
-	beam(area)
+func _on_hurt(hitbox: HitBox, hurtbox: HurtBox) -> void:
+	beam(hitbox)

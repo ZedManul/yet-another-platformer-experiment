@@ -1,7 +1,7 @@
 class_name HitBox extends Area2D
 
 @warning_ignore("unused_signal")
-signal on_hit(hitbox: HitBox, hurtbox: HurtBox)
+signal hit(hitbox: HitBox, hurtbox: HurtBox)
 
 
 @export var enabled: bool:
