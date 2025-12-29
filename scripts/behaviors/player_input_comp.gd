@@ -1,5 +1,5 @@
 @tool
-class_name PlayerInputComponent extends BehaviorComponent
+class_name PlayerInputBehavior extends BehaviorComponent
 
 @export_node_path("Node2D") var aim_pivot: NodePath
 

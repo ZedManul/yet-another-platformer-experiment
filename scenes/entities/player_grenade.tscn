@@ -12,15 +12,16 @@ _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tujdu"]
-radius = 6.0
+radius = 11.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qtirk"]
-radius = 3.0
+radius = 6.0
 
 [node name="PlayerGrenade" type="Area2D" node_paths=PackedStringArray("beam_visual", "beam_raycast", "beam_hitbox")]
 collision_layer = 0
 collision_mask = 7
 script = ExtResource("1_wdvi8")
+fall_gravity = 2000.0
 beam_visual = NodePath("RayCast2D/Line2D")
 beam_raycast = NodePath("RayCast2D")
 beam_hitbox = NodePath("RayCast2D/RayBox")
@@ -39,6 +40,7 @@ metadata/_custom_type_script = "uid://7molth4koagu"
 
 [node name="Polygon2D4" type="Polygon2D" parent="."]
 rotation = -1.5707964
+scale = Vector2(2, 2)
 polygon = PackedVector2Array(6, 1.0000002, 6, -0.99999976, 1.0000002, -6, -0.99999976, -6, -6, -1.0000002, -6, 0.99999976, -1.0000002, 6, 0.99999976, 6)
 
 [node name="Polygon2D" type="Polygon2D" parent="Polygon2D4"]
@@ -61,7 +63,7 @@ script = ExtResource("4_ahs6w")
 damage = 2.0
 knockback_velocity_multiplier = 1.0
 fixed_knockback = true
-knockback = Vector2(400, 0)
+knockback = Vector2(600, 0)
 ignored_teams = Array[int]([0])
 metadata/_custom_type_script = "uid://pp8lm1clk2ca"
 
@@ -75,7 +77,7 @@ metadata/_custom_type_script = "uid://d3ktllfkhh6o0"
 [node name="Line2D" type="Line2D" parent="RayCast2D" node_paths=PackedStringArray("raycast")]
 visible = false
 points = PackedVector2Array(0, 0, 18, 0)
-width = 6.0
+width = 12.0
 begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource("6_avod8")

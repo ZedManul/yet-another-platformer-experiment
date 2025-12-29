@@ -28,11 +28,12 @@ func apply_face() -> void:
 	face_sprite.region_rect = face_rects[current_face]
 	face_sprite.offset = face_offsets[current_face]
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
-	var velocity_ratio_x : float = clamp(player_node.velocity.x / player_node.run_speed * player_node.orient, -1, 1)
-	var velocity_ratio_y : float = clamp(player_node.velocity.y / player_node.jump_impulse, -1, 1)
+	var velocity_ratio_x : float = clamp(player_node.get_real_velocity().x / player_node.run_speed * player_node.orient, -1, 1)
+	var velocity_ratio_y : float = clamp(player_node.get_real_velocity().y / player_node.jump_impulse, -1, 1)
 	var behavior := player_node.behavior
+	
 	var lean_dir : float = 0
 	
 	anim_tree["parameters/blend_run/blend_position"] = velocity_ratio_x

@@ -38,10 +38,8 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export var jump_buffer: float
 
 @export_subgroup("Dash")
-@export var dash_length: float = 64.0
 @export var dash_speed: float = 600.0
 @export var dash_cooldown: float = 0.5
-@export var dash_jump_speed: float = 400.0
 
 
 @export_subgroup("Direction")
@@ -66,6 +64,8 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export var grenade_scene: PackedScene
 @export var grenade_origin: Node2D
 @export var grenade_velocity: Vector2
+@export var grenade_velocity_directed: float
+
 @export var grenade_pogo_recoil: float = 400.0
 
 var coyote_time_left: float
@@ -75,8 +75,6 @@ var attack_cooldown_left: float
 var attack_buffer_left: float
 var shot_buffer_left: float
 var dash_cooldown_left: float
-var dash_time_left: float
-var dash_active: bool = false
 
 var can_cap_jump: bool = false
 var jump_impulse: float
@@ -108,6 +106,7 @@ func _physics_process(delta: float) -> void:
 	_process_grenade()
 	_process_dash()
 	move_and_slide()
+	
 
 
 func _process_timers(delta) -> void:
@@ -115,7 +114,6 @@ func _process_timers(delta) -> void:
 	jump_buffer_left = move_toward(jump_buffer_left, 0, delta)
 	attack_time_left = move_toward(attack_time_left, 0, delta)
 	attack_cooldown_left = move_toward(attack_cooldown_left, 0, delta)
-	dash_time_left = move_toward(dash_time_left, 0, delta)
 	dash_cooldown_left = move_toward(dash_cooldown_left, 0, delta)
 	attack_buffer_left = move_toward(attack_buffer_left, 0, delta)
 	shot_buffer_left = move_toward(shot_buffer_left, 0, delta)
@@ -137,9 +135,9 @@ func _process_run(delta) -> void:
 	var friction_coeff: float = 1.0 if is_on_floor() else air_decel_efficiency
 	var target_speed: float = run_speed * run_dir
 	
-	if sign(run_dir) != sign(velocity.x) or abs(velocity.x) > abs(target_speed):
+	if sign(target_speed) != sign(velocity.x) or abs(velocity.x) > abs(target_speed):
 		velocity.x = move_toward(velocity.x, 0.0, decel * friction_coeff * delta)
-	if abs(velocity.x) < abs(target_speed):
+	if sign(target_speed) != sign(velocity.x) or abs(velocity.x) < abs(target_speed):
 		velocity.x = move_toward(velocity.x, target_speed, accel * abs(run_dir) * accel_coeff * delta)
 
 
@@ -162,10 +160,6 @@ func _process_jump() -> void:
 		coyote_time_left = 0.0
 		jump_buffer_left = 0.0
 		can_cap_jump = true
-		if dash_active:
-			dash_time_left = 0.0
-			dash_active = false
-			velocity.x = dash_orient * dash_jump_speed
 	
 	if velocity.y<0.0 and jump_input_just_released and can_cap_jump: 
 		velocity.y/=2.0;
@@ -200,38 +194,32 @@ func _process_slash()-> void:
 func _process_grenade() -> void:
 	if not (behavior.cmd_bool[&"atk_2"] and not behavior.prev_cmd_bool[&"atk_2"]): return
 	if ammo <= 0: return
-	ammo -=1
+	#ammo -=1
 	var grenade_instance: ComboGrenade = grenade_scene.instantiate()
 	get_tree().get_first_node_in_group(&"GameRoot").add_child(grenade_instance)
-	grenade_instance.global_transform = grenade_origin.global_transform
-	grenade_instance.velocity = velocity + grenade_velocity * Vector2(orient, 1.0)
+	grenade_instance.global_position = grenade_origin.global_position
+	grenade_instance.velocity = velocity + grenade_velocity * Vector2(orient, 1.0) \
+			+ Vector2.from_angle(aim_pivot.global_rotation) * grenade_velocity_directed
 	grenade_instance.exceptions.append(hurtbox)
 	
 
 
 func _process_dash() -> void:
-	if dash_time_left > 0:
-		velocity = Vector2(dash_orient * dash_speed, 0.0)
-		dash_active = true
-	elif dash_active:
-		velocity = Vector2.ZERO
-		dash_active = false
-	
 	var dash_just_pressed = behavior.cmd_bool[&"dash"] and !behavior.prev_cmd_bool[&"dash"]
+	if dash_cooldown_left > 0 or !dash_just_pressed: return
 	
-	if dash_cooldown_left > 0 or !dash_just_pressed or is_zero_approx(behavior.cmd_direction[&"move"].x): return
-	dash_orient = sign(behavior.cmd_direction[&"move"].x)
-	dash_time_left = dash_length / dash_speed
-	dash_cooldown_left = dash_time_left + dash_cooldown
+	dash_orient = sign(sign(behavior.cmd_direction[&"move"].x) + 0.5 * orient)
+	velocity.x = dash_orient * dash_speed
+	velocity.y = minf(velocity.y, 0.0)
+	dash_cooldown_left = dash_cooldown
 
 
 
 
-func _on_attack_hit(hitbox: HitBox, hurtbox: HurtBox) -> void:
-	
+func _on_attack_hit(_hitbox: HitBox, atkd_hurtbox: HurtBox) -> void:
 	
 	var recoil: Vector2 = -Vector2.from_angle(aim_pivot.global_rotation)  
-	if hurtbox is ComboGrenade:
+	if atkd_hurtbox is ComboGrenade:
 		recoil *= grenade_pogo_recoil
 		
 	else:
@@ -240,10 +228,6 @@ func _on_attack_hit(hitbox: HitBox, hurtbox: HurtBox) -> void:
 	if is_on_floor(): recoil *= grounded_recoil_coeff
 	velocity = recoil
 	can_cap_jump = false
-	dash_time_left = 0.0
-	dash_active = false
 
 func _on_hurt(_hitbox: HitBox, _hurtbox: HurtBox) -> void:
-	dash_time_left = 0.0
-	dash_active = false
 	can_cap_jump = false

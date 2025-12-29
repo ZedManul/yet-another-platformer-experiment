@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="1_tb2qs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_01hlq"]
-size = Vector2(64, 40)
+size = Vector2(128, 72)
 
 [node name="Hitbox" type="Area2D"]
 collision_layer = 4
@@ -12,12 +12,13 @@ script = ExtResource("1_tb2qs")
 enabled = true
 damage = 1.0
 fixed_knockback = true
-knockback = Vector2(0, -200)
+knockback = Vector2(0, -500)
 
 [node name="Spoik" type="Polygon2D" parent="."]
+scale = Vector2(2, 2)
 color = Color(0.66, 0.06600002, 0.06600002, 1)
 polygon = PackedVector2Array(-16, -24, -8, -48, 0, -32, 16, -56, 16, -16, 40, -48, 32, -8, 40, 0, -40, 0, -32, -8, -40, -48)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -20)
+position = Vector2(0, -36)
 shape = SubResource("RectangleShape2D_01hlq")

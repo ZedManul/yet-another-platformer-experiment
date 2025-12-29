@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="2_rm6nt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n8ql4"]
-radius = 32.0
+radius = 64.0
 
 [sub_resource type="Gradient" id="Gradient_n8ql4"]
 offsets = PackedFloat32Array(0, 0.03992016, 0.46906188, 0.53093815, 1)
@@ -11,8 +11,8 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0.9560878, 1, 1, 1, 0
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_rm6nt"]
 gradient = SubResource("Gradient_n8ql4")
-width = 128
-height = 128
+width = 256
+height = 256
 use_hdr = true
 fill = 1
 fill_from = Vector2(0.5, 0.5)
@@ -25,7 +25,7 @@ collision_mask = 0
 script = ExtResource("2_rm6nt")
 enabled = true
 dynamic_knockback = true
-knockback_strength = 400.0
+knockback_strength = 800.0
 metadata/_custom_type_script = "uid://pp8lm1clk2ca"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
