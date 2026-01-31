@@ -1,14 +1,7 @@
 class_name PlatformerCharacterController extends CharacterBody2D
 
 
-@export var behavior: BehaviorComponent:
-	set(value):
-		behavior = value
-		if not behavior: return
-		behavior.owner = self
-
-
-@export var team: HurtBox.TEAM
+@export var team: HurtBox.Team
 
 @export_group("Movement")
 @export_subgroup("Run")
@@ -65,8 +58,9 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export var grenade_origin: Node2D
 @export var grenade_velocity: Vector2
 @export var grenade_velocity_directed: float
-
 @export var grenade_pogo_recoil: float = 400.0
+
+var aim_data: Vector2
 
 var coyote_time_left: float
 var jump_buffer_left: float
@@ -94,14 +88,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	behavior.calc_prev()
-	behavior.update()
+	_process_aim()
 	_process_timers(delta)
 	_process_flip() 
 	_process_gravity(delta)
 	_process_run(delta)
 	_process_jump()
-	_process_aim()
 	_process_slash()
 	_process_grenade()
 	_process_dash()
@@ -119,8 +111,9 @@ func _process_timers(delta) -> void:
 	shot_buffer_left = move_toward(shot_buffer_left, 0, delta)
 
 
+
 func _process_gravity(delta) -> void:
-	var slam_just_pressed: bool = behavior.cmd_direction[&"move"].y>0 and not behavior.prev_cmd_direction[&"move"].y>0
+	var slam_just_pressed: bool = Input.is_action_just_pressed("move_down")
 	if slam_just_pressed and velocity.y < slam_speed and not is_on_floor():
 		velocity.y = slam_speed
 	if velocity.y<0:
@@ -130,7 +123,7 @@ func _process_gravity(delta) -> void:
 
 
 func _process_run(delta) -> void:
-	var run_dir: float = behavior.cmd_direction[&"move"].x
+	var run_dir: float = Input.get_axis("move_left","move_right")
 	var accel_coeff: float = 1.0 if is_on_floor() else air_accel_efficiency
 	var friction_coeff: float = 1.0 if is_on_floor() else air_decel_efficiency
 	var target_speed: float = run_speed * run_dir
@@ -142,18 +135,16 @@ func _process_run(delta) -> void:
 
 
 func _process_flip() -> void:
-	var aim_dir: float = wrap(behavior.cmd_direction[&"aim"].angle() + PI/2, -PI, PI) * orient
+	var aim_dir: float = wrap(aim_data.angle() + PI/2, -PI, PI) * orient
 	if aim_dir > -flip_buffer_angle or aim_dir < (flip_buffer_angle - PI): return
 	scale.x *= -1.0
 	orient *= -1.0
 
 
 func _process_jump() -> void:
-	var jump_input_just_pressed = behavior.cmd_bool[&"jump"] and not behavior.prev_cmd_bool[&"jump"]
-	var jump_input_just_released = not behavior.cmd_bool[&"jump"] and behavior.prev_cmd_bool[&"jump"]
 	
 	if is_on_floor(): coyote_time_left = coyote_time
-	if jump_input_just_pressed: jump_buffer_left = jump_buffer
+	if Input.is_action_just_pressed("jump"): jump_buffer_left = jump_buffer
 	
 	if coyote_time_left > 0 and jump_buffer_left > 0:
 		velocity.y = -jump_impulse
@@ -161,18 +152,19 @@ func _process_jump() -> void:
 		jump_buffer_left = 0.0
 		can_cap_jump = true
 	
-	if velocity.y<0.0 and jump_input_just_released and can_cap_jump: 
+	if velocity.y<0.0 and Input.is_action_just_released("jump") and can_cap_jump: 
 		velocity.y/=2.0;
 		can_cap_jump = false
 
 
 func _process_aim():
+	aim_data = get_global_mouse_position() - aim_pivot.global_position
 	if attack_time_left>0: return
-	aim_pivot.global_rotation = behavior.cmd_direction[&"aim"].angle()
+	aim_pivot.global_rotation = aim_data.angle()
 
 
 func _process_slash()-> void:
-	if behavior.cmd_bool[&"atk"] and not behavior.prev_cmd_bool[&"atk"]:
+	if Input.is_action_just_pressed("attack"):
 		attack_buffer_left = attack_buffer
 	
 	if attack_time_left > 0:
@@ -192,9 +184,9 @@ func _process_slash()-> void:
 
 
 func _process_grenade() -> void:
-	if not (behavior.cmd_bool[&"atk_2"] and not behavior.prev_cmd_bool[&"atk_2"]): return
+	if not (Input.is_action_just_pressed("attack_2")): return
 	if ammo <= 0: return
-	#ammo -=1
+	ammo -=1
 	var grenade_instance: ComboGrenade = grenade_scene.instantiate()
 	get_tree().get_first_node_in_group(&"GameRoot").add_child(grenade_instance)
 	grenade_instance.global_position = grenade_origin.global_position
@@ -205,10 +197,9 @@ func _process_grenade() -> void:
 
 
 func _process_dash() -> void:
-	var dash_just_pressed = behavior.cmd_bool[&"dash"] and !behavior.prev_cmd_bool[&"dash"]
-	if dash_cooldown_left > 0 or !dash_just_pressed: return
+	if dash_cooldown_left > 0 or !Input.is_action_just_pressed("dash"): return
 	
-	dash_orient = sign(sign(behavior.cmd_direction[&"move"].x) + 0.5 * orient)
+	dash_orient = sign(sign(Input.get_axis("move_left","move_right")) + 0.5 * orient)
 	velocity.x = dash_orient * dash_speed
 	velocity.y = minf(velocity.y, 0.0)
 	dash_cooldown_left = dash_cooldown
@@ -221,9 +212,9 @@ func _on_attack_hit(_hitbox: HitBox, atkd_hurtbox: HurtBox) -> void:
 	var recoil: Vector2 = -Vector2.from_angle(aim_pivot.global_rotation)  
 	if atkd_hurtbox is ComboGrenade:
 		recoil *= grenade_pogo_recoil
-		
 	else:
 		recoil *= attack_recoil
+	if atkd_hurtbox.can_generate_resource:
 		ammo = min(ammo + 1, max_ammo)
 	if is_on_floor(): recoil *= grounded_recoil_coeff
 	velocity = recoil

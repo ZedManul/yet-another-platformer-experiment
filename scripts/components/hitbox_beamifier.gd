@@ -5,7 +5,7 @@ class_name HitboxBeamShape extends CollisionShape2D
 func _ready() -> void:
 	shape = shape.duplicate(true)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not raycast: return
 	var cast_start: Vector2 = raycast.global_position
 	var cast_end: Vector2 = raycast.to_global(raycast.target_position)

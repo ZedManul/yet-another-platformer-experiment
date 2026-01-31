@@ -25,12 +25,17 @@ signal hit(hitbox: HitBox, hurtbox: HurtBox)
 @export var knockback_ratio: Vector2 = Vector2.ONE
 @export var knockback_origin: Node2D
 @export_group("Targeting")
-@export var ignored_teams: Array[HurtBox.TEAM]
+@export var ignored_teams: Array[HurtBox.Team]
 @export var exceptions: Array[HurtBox]
 
 
 func _ready() -> void:
 	_enable.call_deferred(enabled)
+	
+	collision_layer = 0
+	collision_mask = 0
+	set_collision_layer_value(3,true)
+	set_collision_mask_value(3,true)
 
 
 func get_fixed_knockback() -> Vector2:

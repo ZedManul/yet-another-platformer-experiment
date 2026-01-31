@@ -56,10 +56,10 @@ func explode(coords: Vector2) -> void:
 	beam_raycast.add_exception(explosion)
 	
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(_body: Node2D) -> void:
 	explode.call_deferred(global_position)
 	queue_free()
 
 
-func _on_hurt(hitbox: HitBox, hurtbox: HurtBox) -> void:
+func _on_hurt(hitbox: HitBox, _hurtbox: HurtBox) -> void:
 	beam(hitbox)

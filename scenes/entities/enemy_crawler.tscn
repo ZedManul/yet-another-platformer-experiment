@@ -1,0 +1,135 @@
+[gd_scene load_steps=14 format=3 uid="uid://bu3g1k6ijnhrm"]
+
+[ext_resource type="Script" uid="uid://pp8lm1clk2ca" path="res://scripts/components/hitbox.gd" id="1_1lr6t"]
+[ext_resource type="Script" uid="uid://cimhyxq7fho3l" path="res://scripts/entities/enemy_crawler.gd" id="1_i0c1j"]
+[ext_resource type="Script" uid="uid://4sywd4r3ek53" path="res://scripts/components/hurtbox.gd" id="2_u20ks"]
+[ext_resource type="Script" uid="uid://lo3ecvr55hka" path="res://scripts/components/hurtbox_subcomponents/hurtbox_subcomponent.gd" id="3_5x4ck"]
+[ext_resource type="Script" uid="uid://sy6bqt2kqbik" path="res://scripts/components/health_tracker.gd" id="3_wlwk2"]
+[ext_resource type="Script" uid="uid://dp14s2pow2p73" path="res://scripts/components/hurtbox_subcomponents/knockback_component.gd" id="4_3o5da"]
+[ext_resource type="Script" uid="uid://1yi75nt2ecsh" path="res://scripts/components/hurtbox_subcomponents/health_component.gd" id="5_3o5da"]
+[ext_resource type="Script" uid="uid://dpd68g27n1o0h" path="res://scripts/_debug/_debug_health_display.gd" id="7_kc1tt"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7plfp"]
+radius = 12.0
+height = 48.0
+
+[sub_resource type="Resource" id="Resource_i0c1j"]
+resource_local_to_scene = true
+script = ExtResource("4_3o5da")
+physics_body = NodePath("..")
+knockback_center = NodePath("../CollisionShape2D")
+metadata/_custom_type_script = "uid://dp14s2pow2p73"
+
+[sub_resource type="Resource" id="Resource_57t8k"]
+resource_local_to_scene = true
+script = ExtResource("5_3o5da")
+health_tracker = NodePath("../HealthTracker")
+metadata/_custom_type_script = "uid://1yi75nt2ecsh"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1lr6t"]
+radius = 11.0
+height = 46.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i0c1j"]
+size = Vector2(111, 110)
+
+[node name="EnemyCrawler" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_i0c1j")
+friction_exp = 0.1
+friction_lin = 100.0
+accel = 1600.0
+max_speed = 300.0
+attack_momentum = Vector2(600, -400)
+anticipation_time = 0.2
+atk_time = 0.4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -12)
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_7plfp")
+
+[node name="HurtBox" type="Area2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_u20ks")
+subcomponents = Array[ExtResource("3_5x4ck")]([SubResource("Resource_i0c1j"), SubResource("Resource_57t8k")])
+team = 1
+metadata/_custom_type_script = "uid://4sywd4r3ek53"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0, -12)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_1lr6t")
+debug_color = Color(0.99320513, 0, 0.24773586, 0.41960785)
+
+[node name="StrikeStartArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 8
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StrikeStartArea"]
+position = Vector2(55.5, -41)
+shape = SubResource("RectangleShape2D_i0c1j")
+debug_color = Color(0.22746041, 0.6384792, 0, 0.41960785)
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(-20, 0, -23.179657, -9.538967, -33, 0, -15, -24, -1, -21, 4, -24, 12, -24, 11, -18, 23, -17, 24, -12, 21, -4, 20, -8, 18, -3, 17, -8, 14, -2, 12, -7, 10, -2, 12, 0, 3.18116, 0, 0, -3, -11, -2, -11, 0)
+
+[node name="Polygon2D" type="Polygon2D" parent="Polygon2D"]
+color = Color(0.43, 0, 0, 1)
+polygon = PackedVector2Array(19, -11, 2, -16, 6, -9)
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_1lr6t")
+damage = 1.0
+fixed_knockback = true
+knockback = Vector2(600, -200)
+ignored_teams = Array[int]([1])
+metadata/_custom_type_script = "uid://pp8lm1clk2ca"
+
+[node name="AttackVisual" type="Polygon2D" parent="AttackHitbox"]
+unique_name_in_owner = true
+visible = false
+position = Vector2(7, 0)
+polygon = PackedVector2Array(35, -28, 26, -7, 26, -22, 16, -11, 16, -26, 8, -17, 10.58102, -27.354744, -8, -32)
+
+[node name="Polygon2D" type="Polygon2D" parent="AttackHitbox/AttackVisual"]
+polygon = PackedVector2Array(22, -9, 23, 2, -6, 8, 9, 3, 8, -3, 12.100193, 1.9666023, 14, -7, 18, 0)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackHitbox"]
+polygon = PackedVector2Array(37, -26, 3, -29, -14, -11, 2, 5, 28, 0)
+
+[node name="HealthTracker" type="Node" parent="." node_paths=PackedStringArray("killable")]
+script = ExtResource("3_wlwk2")
+max_hp = 6.0
+killable = NodePath("..")
+metadata/_custom_type_script = "uid://sy6bqt2kqbik"
+
+[node name="LedgeDetector" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(27, -9)
+target_position = Vector2(10, 16)
+
+[node name="WallDetector" type="RayCast2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(25, -22)
+target_position = Vector2(0, 21)
+hit_from_inside = true
+
+[node name="HealthIndicator" type="Label" parent="." node_paths=PackedStringArray("health_tracker")]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -16.0
+offset_top = -51.0
+offset_right = 16.0
+offset_bottom = -28.0
+grow_horizontal = 2
+horizontal_alignment = 1
+script = ExtResource("7_kc1tt")
+health_tracker = NodePath("../HealthTracker")

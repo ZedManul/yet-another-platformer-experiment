@@ -2,7 +2,7 @@ class_name HurtBox extends Area2D
 
 signal hurt(hitbox: HitBox, hurtbox: HurtBox)
 
-enum TEAM {
+enum Team {
 	PLAYER,
 	ENEMY,
 	ENVIRONMENT,
@@ -12,10 +12,17 @@ enum TEAM {
 
 @export var enabled: bool = true
 @export var subcomponents: Array[HurtBoxSubcomponent]
-@export var team: TEAM
+@export var team: Team
+@export var can_generate_resource: bool = true
 @export_group("Invincibility Frames")
-@export var invincibility_time: float = 0.5 # seconds
+@export var invincibility_time: float = 0.2 # seconds
 var invincibility_timers: Dictionary[int, float]
+
+func _ready() -> void:
+	collision_layer = 0
+	collision_mask = 0
+	set_collision_layer_value(4,true)
+	set_collision_mask_value(3,true)
 
 
 func _physics_process(delta: float) -> void:

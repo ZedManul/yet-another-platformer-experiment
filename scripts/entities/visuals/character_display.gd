@@ -32,7 +32,6 @@ func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	var velocity_ratio_x : float = clamp(player_node.get_real_velocity().x / player_node.run_speed * player_node.orient, -1, 1)
 	var velocity_ratio_y : float = clamp(player_node.get_real_velocity().y / player_node.jump_impulse, -1, 1)
-	var behavior := player_node.behavior
 	
 	var lean_dir : float = 0
 	
@@ -54,7 +53,7 @@ func _physics_process(delta: float) -> void:
 		anim_tree["parameters/transition_airstate/transition_request"] = "air"
 		anim_tree["parameters/blend_landing/blend_amount"] = 0.0
 	
-	if behavior.cmd_direction[&"move"].x == 0:
+	if Input.get_axis("move_left","move_right") == 0:
 		anim_tree["parameters/blend_grounded/blend_amount"] = move_toward(
 			anim_tree["parameters/blend_grounded/blend_amount"],
 			0.0,

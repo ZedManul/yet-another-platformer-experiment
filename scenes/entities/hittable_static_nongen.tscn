@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0o4qupsv1ff3"]
+
+[ext_resource type="Script" uid="uid://4sywd4r3ek53" path="res://scripts/components/hurtbox.gd" id="1_si3xh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4mndh"]
+radius = 16.0
+
+[node name="HittableStaticNonGen" type="Area2D"]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_si3xh")
+team = 2
+can_generate_resource = false
+metadata/_custom_type_script = "uid://4sywd4r3ek53"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_4mndh")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+scale = Vector2(2, 2)
+color = Color(0.5339987, 0.8821367, 0.9999998, 1)
+polygon = PackedVector2Array(8, 0, 6, 6, 0, 8, -6, 6, -8, 0, -6, -6, 0, -8, 6, -6)
+
+[node name="Polygon2D" type="Polygon2D" parent="Polygon2D"]
+color = Color(5.2943824e-07, 0.33766422, 0.420014, 1)
+polygon = PackedVector2Array(3, 0, 6.5, -3.5, 3.5, -6.5, 0, -3, -3.5, -6.5, -6.5, -3.5, -3, 0, -6.5, 3.5, -3.5, 6.5, 0, 3, 3.5, 6.5, 6.5, 3.5)
