@@ -49,7 +49,7 @@ class_name PlatformerCharacterController extends CharacterBody2D
 @export var attack_recoil: float
 @export var grounded_recoil_coeff: Vector2 = Vector2(0.5,0.1)
 @export var atk_hitbox: HitBox
-@export var atk_visual: Node2D
+#@export var atk_visual: Node2D
 
 
 @export_subgroup("Grenade")
@@ -170,12 +170,12 @@ func _process_slash()-> void:
 	if attack_time_left > 0:
 		return
 	
-	atk_visual.hide()
+	#atk_visual.hide()
 	atk_hitbox.enabled = false
 	
 	if attack_cooldown_left > 0 or not attack_buffer_left: return
 	
-	atk_visual.show()
+	#atk_visual.show()
 	atk_hitbox.enabled = true
 	attack_buffer_left = 0.0
 	attack_cooldown_left = attack_cooldown
