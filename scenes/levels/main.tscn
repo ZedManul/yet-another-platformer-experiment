@@ -3,13 +3,15 @@
 [ext_resource type="Shader" uid="uid://cnj2fgs1ctxu8" path="res://scripts/shaders/pixel_filtering.gdshader" id="1_u81e1"]
 [ext_resource type="Texture2D" uid="uid://0fv1tkma00iw" path="res://assets/visual/test_tile_32.png" id="2_vkq25"]
 [ext_resource type="Script" uid="uid://bnypaxdkutp60" path="res://scripts/tools/dual_grid.gd" id="3_ubwgw"]
-[ext_resource type="Texture2D" uid="uid://frp6i2nnycfk" path="res://assets/visual/test_tiles_32.png" id="4_vkq25"]
-[ext_resource type="PackedScene" uid="uid://cybupd33n8syi" path="res://scenes/entities/player_bot.tscn" id="5_b6bv0"]
+[ext_resource type="Texture2D" uid="uid://cb5gg08erxcg6" path="res://assets/visual/wood_tiling.png" id="4_rssyh"]
+[ext_resource type="PackedScene" uid="uid://cybupd33n8syi" path="res://scenes/entities/player_hunter.tscn" id="5_b6bv0"]
 [ext_resource type="PackedScene" uid="uid://eliwkm4e15c0" path="res://scenes/entities/spoik.tscn" id="7_ubwgw"]
 [ext_resource type="PackedScene" uid="uid://6qtn3gvlbbp8" path="res://scenes/entities/hittable_static.tscn" id="9_7lrji"]
 [ext_resource type="PackedScene" uid="uid://c0o4qupsv1ff3" path="res://scenes/entities/hittable_static_nongen.tscn" id="9_rssyh"]
 [ext_resource type="Script" uid="uid://cabeolhp8nl1s" path="res://scripts/entities/enemy_spawner.gd" id="10_rssyh"]
+[ext_resource type="Texture2D" uid="uid://c0be2n8vbgjmx" path="res://assets/visual/ocean_bg.png" id="11_2xkjh"]
 [ext_resource type="PackedScene" uid="uid://bu3g1k6ijnhrm" path="res://scenes/entities/enemy_crawler.tscn" id="11_hwp66"]
+[ext_resource type="Texture2D" uid="uid://b6n3duvijs727" path="res://assets/visual/ocean_fg.png" id="12_2xkjh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0xwkt"]
 shader = ExtResource("1_u81e1")
@@ -27,7 +29,7 @@ physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_8d268")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_32soa"]
-texture = ExtResource("4_vkq25")
+texture = ExtResource("4_rssyh")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 1:0/0 = 0
@@ -135,3 +137,101 @@ position = Vector2(719, -157)
 script = ExtResource("10_rssyh")
 enemy_scene = ExtResource("11_hwp66")
 max_enemies = 1
+
+[node name="BG_Ocean" type="Node2D" parent="." unique_id=1604717249]
+
+[node name="BG" type="Parallax2D" parent="BG_Ocean" unique_id=948850418]
+z_index = -100
+scroll_scale = Vector2(0, 0)
+repeat_size = Vector2(864, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/BG" unique_id=1041430853]
+position = Vector2(431, 241)
+texture = ExtResource("11_2xkjh")
+
+[node name="Clouds7" type="Parallax2D" parent="BG_Ocean" unique_id=797485450]
+z_index = -100
+scroll_scale = Vector2(0.05, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds7" unique_id=585325792]
+position = Vector2(472, 334)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 328, 864, 19)
+
+[node name="Clouds6" type="Parallax2D" parent="BG_Ocean" unique_id=1073948125]
+modulate = Color(0.8509804, 0.89411765, 1, 1)
+z_index = -100
+scroll_scale = Vector2(0.1, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds6" unique_id=1738964524]
+position = Vector2(517, 317)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 296, 864, 32)
+
+[node name="Clouds5" type="Parallax2D" parent="BG_Ocean" unique_id=386875664]
+z_index = -100
+scroll_scale = Vector2(0.2, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds5" unique_id=566599776]
+position = Vector2(680, 294)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 296, 864, 32)
+
+[node name="Clouds4" type="Parallax2D" parent="BG_Ocean" unique_id=2109026280]
+modulate = Color(0.8509804, 0.89411765, 1, 1)
+z_index = -100
+scroll_scale = Vector2(0.3, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds4" unique_id=455114282]
+position = Vector2(678, 261)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 206, 864, 92)
+
+[node name="Clouds3" type="Parallax2D" parent="BG_Ocean" unique_id=2039665856]
+z_index = -100
+scroll_scale = Vector2(0.4, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds3" unique_id=1775951327]
+position = Vector2(432, 207)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 206, 864, 92)
+
+[node name="Clouds2" type="Parallax2D" parent="BG_Ocean" unique_id=1825239022]
+modulate = Color(0.85, 0.895, 1, 1)
+z_index = -100
+scroll_scale = Vector2(0.5, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds2" unique_id=1571350597]
+position = Vector2(610, 114)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 0, 864, 197)
+
+[node name="Clouds1" type="Parallax2D" parent="BG_Ocean" unique_id=666996531]
+z_index = -100
+scroll_scale = Vector2(0.6, 0)
+repeat_size = Vector2(864, 0)
+repeat_times = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="BG_Ocean/Clouds1" unique_id=1231731797]
+position = Vector2(480, 68.5)
+texture = ExtResource("12_2xkjh")
+region_enabled = true
+region_rect = Rect2(0, 0, 864, 197)

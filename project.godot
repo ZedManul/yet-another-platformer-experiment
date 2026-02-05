@@ -24,10 +24,11 @@ config/icon="res://icon.svg"
 window/size/viewport_width=864
 window/size/viewport_height=486
 window/stretch/mode="canvas_items"
+window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/com.timothyqiu.animation-resetter/plugin.cfg", "res://addons/soupik/plugin.cfg", "res://addons/trail_2d/plugin.cfg", "res://addons/wiggly_appendage_2d/plugin.cfg")
+enabled=PackedStringArray("res://addons/soupik/plugin.cfg", "res://addons/trail_2d/plugin.cfg", "res://addons/wiggly_appendage_2d/plugin.cfg")
 
 [global_group]
 
@@ -88,3 +89,7 @@ dash={
 2d_physics/layer_2="Characters"
 2d_physics/layer_3="Hitboxes"
 2d_physics/layer_4="Hurtboxes"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.1292, 0.14348, 0.17, 1)
